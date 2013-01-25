@@ -9,7 +9,6 @@ userSchema = mongoose.Schema
    first_name: { type: String, required: true }
    last_name: { type: String, required: true }
    profile_image_url: { type: Url }
-   created_on: { type: Date, require: true, default: Date.now }
    refresh_token: { type: String, required: true }
    facebook_token: String
    twitter_token: String

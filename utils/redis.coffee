@@ -9,7 +9,7 @@ module.exports = (redis_url) ->
    if password = parsed_auth[1]
       client.auth password, (err) -> throw err if err
 
-   client.on "ready", () -> console.log "redis ready!"
+   client.on "ready", () -> console.log "redis ready!" unless process.env.NODE_ENV
    if database = parsed_auth[0] and parsed_auth[0] != "none"
       client.select database
       client.on "connect", () ->

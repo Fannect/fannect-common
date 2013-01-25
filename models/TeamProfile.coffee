@@ -36,7 +36,6 @@ teamProfileSchema = mongoose.Schema
    trash_talk: [
       _id: { type: Schema.Types.ObjectId, require: true }
       text: { type: String, require: true }
-      timestamp: { type: Date, require: true, default: Date.now }
    ]
 
 module.exports = mongoose.model("TeamProfile", teamProfileSchema)
