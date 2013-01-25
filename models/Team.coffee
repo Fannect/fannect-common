@@ -3,6 +3,7 @@ Schema = mongoose.Schema
 
 teamSchema = mongoose.Schema
    _id: { type: Schema.Types.ObjectId, require: true, index: { unique: true } }
+   team_key: { type: String, require: true }
    abbreviation: { type: String, require: true }
    nickname: { type: String, require: true }
    stadium: 

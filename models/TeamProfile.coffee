@@ -6,6 +6,7 @@ teamProfileSchema = mongoose.Schema
    user_id: { type: Schema.Types.ObjectId, ref: "User", require: true, index: true }
    name: { type: String, require: true, index: true }
    team_id: { type: Schema.Types.ObjectId, ref: "Team", require: true, index: true }
+   team_key: { type: String, require: true }
    team_name: { type: String, require: true }
    points:
       overall: { type: Number, require: true, default: 0 }

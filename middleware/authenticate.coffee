@@ -3,7 +3,7 @@ InvalidArgumentError = require("../errors/InvalidArgumentError")
 NotAuthorizedError = require("../errors/NotAuthorizedError")
 
 auth = module.exports = (req, res, next) ->
-   checkForToken(req, res, next)
+   return checkForToken(req, res, next)
    redis.get token, (err, result) ->
       return next(err) if err
       return next(new NotAuthorizedError("Invalid access_token")) if not result
@@ -12,7 +12,7 @@ auth = module.exports = (req, res, next) ->
       next()
 
 auth.sub = (req, res, next) ->
-   checkForToken(req, res, next)
+   return checkForToken(req, res, next)
    redis.get token, (err, result) ->
       return next(err) if err
       return next(new NotAuthorizedError("Invalid access_token")) if not result
@@ -26,7 +26,7 @@ auth.sub = (req, res, next) ->
          next(new NotAuthorizedError("Do not have required authorization level. Must be 'sub' or higher"))
 
 auth.starter = (req, res, next) ->
-   checkForToken(req, res, next)
+   return checkForToken(req, res, next)
    redis.get token, (err, result) ->
       return next(err) if err
       return next(new NotAuthorizedError("Invalid access_token")) if not result
@@ -40,7 +40,7 @@ auth.starter = (req, res, next) ->
          next(new NotAuthorizedError("Do not have required authorization level. Must be 'starter' or higher"))
 
 auth.allstar = (req, res, next) ->
-   checkForToken(req, res, next)
+   return checkForToken(req, res, next)
    redis.get token, (err, result) ->
       return next(err) if err
       return next(new NotAuthorizedError("Invalid access_token")) if not result
@@ -54,7 +54,7 @@ auth.allstar = (req, res, next) ->
          next(new NotAuthorizedError("Do not have required authorization level. Must be 'allstar' or higher."))
 
 auth.mvp = (req, res, next) ->
-   checkForToken(req, res, next)
+   return checkForToken(req, res, next)
    redis.get token, (err, result) ->
       return next(err) if err
       return next(new NotAuthorizedError("Invalid access_token")) if not result
@@ -68,7 +68,7 @@ auth.mvp = (req, res, next) ->
          next(new NotAuthorizedError("Do not have required authorization level. Must be 'mvp' or higher."))
 
 auth.hof = (req, res, next) ->
-   checkForToken(req, res, next)
+   return checkForToken(req, res, next)
    redis.get token, (err, result) ->
       return next(err) if err
       return next(new NotAuthorizedError("Invalid access_token")) if not result
