@@ -1,6 +1,11 @@
 mongoose = require "mongoose"
 Url = mongoose.SchemaTypes.Url
 Schema = mongoose.Schema
+User = require "./User"
+Team = require "./Team"
+async = require "async"
+DuplicateError = require "../errors/DuplicateError"
+MongoError = require "../errors/MongoError"
 
 teamProfileSchema = mongoose.Schema
    user_id: { type: Schema.Types.ObjectId, ref: "User", require: true, index: true }
@@ -16,7 +21,6 @@ teamProfileSchema = mongoose.Schema
    friends: [{ type: Schema.Types.ObjectId, index: true }]
    events: [
       type: { type: String, require: true, }
-      timestamp: { type: Date, default: Date.now }
       points_earned: 
          overall: { type: Number, require: true, default: 0 }
          knowledge: { type: Number, require: true, default: 0 }
@@ -29,7 +33,6 @@ teamProfileSchema = mongoose.Schema
    has_processing: { type: Boolean, require: true, index: true, default: false }
    waiting_events: [
       type: { type: String, require: true, }
-      timestamp: { type: Date, require: true, default: Date.now }
       meta: Schema.Types.Mixed   
       is_processing: { type: Boolean, require: true, default: false }
    ]
@@ -37,5 +40,53 @@ teamProfileSchema = mongoose.Schema
       _id: { type: Schema.Types.ObjectId, require: true }
       text: { type: String, require: true }
    ]
+
+teamProfileSchema.statics.createAndAttach = (user, team_id, cb) ->
+   context = @
+   newId = new mongoose.Types.ObjectId
+   
+
+   # Check for existance
+   context
+   .find({user_id: user._id, team_id: team_id })
+   .exec (err, data) ->
+      cb(new DuplicateError(err)) if data.length != 0
+
+      async.parallel 
+         team: (done) ->
+            Team.findOne {"_id": team_id}, "abbreviation nickname team_key", done
+         friends: (done) ->
+            # return without querying if user has no friends
+            return done null, [] unless user.friends?.length > 0
+            context
+            .find({ team_id: team_id, user_id: { $in: user.friends }})
+            .select("friends")
+            .exec(done)
+      , (err, results) ->
+         return cb(new MongoError(err)) if err
+
+         new_friends = []
+         updated = 
+            create: (done) ->
+               context.create {
+                  _id: newId
+                  user_id: user._id 
+                  name: "#{user.first_name} #{user.last_name}"
+                  team_id: results.team._id
+                  team_key: results.team.team_key
+                  team_name: "#{results.team.abbreviation} #{results.team.nickname}" 
+                  friends: new_friends
+               }, done
+            update_owner: (done) ->
+               User.update {_id: user._id}, {$addToSet: {team_profiles: newId}}, done
+
+         for p in results.friends
+            p.friends.addToSet(newId)
+            new_friends.push(p._id)
+            updated[p._id] = (done) -> p.save(done)
+
+         async.parallel updated, (err, result) ->
+            return cb(new MongoError(err)) if err 
+            cb null, result.create
 
 module.exports = mongoose.model("TeamProfile", teamProfileSchema)
