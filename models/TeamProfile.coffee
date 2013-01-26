@@ -44,7 +44,6 @@ teamProfileSchema = mongoose.Schema
 teamProfileSchema.statics.createAndAttach = (user, team_id, cb) ->
    context = @
    newId = new mongoose.Types.ObjectId
-   
 
    # Check for existance
    context
@@ -52,6 +51,7 @@ teamProfileSchema.statics.createAndAttach = (user, team_id, cb) ->
    .exec (err, data) ->
       cb(new DuplicateError(err)) if data.length != 0
 
+      # Get team and current friends
       async.parallel 
          team: (done) ->
             Team.findOne {"_id": team_id}, "abbreviation nickname team_key", done
@@ -80,11 +80,13 @@ teamProfileSchema.statics.createAndAttach = (user, team_id, cb) ->
             update_owner: (done) ->
                User.update {_id: user._id}, {$addToSet: {team_profiles: newId}}, done
 
+         # Swap team profile ids
          for p in results.friends
             p.friends.addToSet(newId)
             new_friends.push(p._id)
             updated[p._id] = (done) -> p.save(done)
 
+         # Save all changes
          async.parallel updated, (err, result) ->
             return cb(new MongoError(err)) if err 
             cb null, result.create
