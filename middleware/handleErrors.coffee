@@ -1,7 +1,7 @@
 RestError = require "../errors/RestError"
 
 module.exports = (err, req, res, next) ->
-   
+   console.log err.stack
    if err
       if RestError.prototype.isPrototypeOf(err)
          return res.json err.code, err.toResObject()
