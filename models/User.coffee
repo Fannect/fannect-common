@@ -10,7 +10,7 @@ userSchema = mongoose.Schema
    first_name: { type: String, required: true }
    last_name: { type: String, required: true }
    profile_image_url: { type: Url }
-   refresh_token: { type: String, required: true }
+   refresh_token: { type: String, required: true, index: { unique: true }}
    facebook_token: String
    twitter_token: String
    friends: [{ type: Schema.Types.ObjectId, ref: "User" }]
