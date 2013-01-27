@@ -49,7 +49,8 @@ teamProfileSchema.statics.createAndAttach = (user, team_id, cb) ->
    context
    .find({user_id: user._id, team_id: team_id })
    .exec (err, data) ->
-      cb(new DuplicateError(err)) if data.length != 0
+      cb(new MongoError(err)) if err
+      cb(new DuplicateError(err)) if data?.length != 0
 
       # Get team and current friends
       async.parallel 
