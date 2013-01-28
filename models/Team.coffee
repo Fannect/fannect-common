@@ -4,12 +4,12 @@ Schema = mongoose.Schema
 teamSchema = mongoose.Schema
    _id: { type: Schema.Types.ObjectId, require: true, index: { unique: true } }
    team_key: { type: String, require: true }
-   abbreviation: { type: String, require: true }
-   nickname: { type: String, require: true }
+   mascot: { type: String, require: true }
+   location_name: { type: String, require: true }
+   full_name: { type: String, require: true, index: { unique: true } }
    stadium: 
       name: { type: String, require: true }
       coords: [ type: Number ]
-   location_name: { type: String, require: true }
    sport_key: { type: String, require: true, index: true }
    sport_name: { type: String, require: true }
    league_key: { type: String, require: true, index: true }

@@ -1,5 +1,4 @@
 mongoose = require "mongoose"
-Url = mongoose.SchemaTypes.Url
 Schema = mongoose.Schema
 User = require "./User"
 Team = require "./Team"
@@ -28,8 +27,8 @@ teamProfileSchema = mongoose.Schema
          dedication: { type: Number, require: true, default: 0 }
       meta: Schema.Types.Mixed
    ]
-   team_image_url: Url
-   profile_image_url: Url
+   team_image_url: { type: String, require: true }
+   profile_image_url: { type: String, require: true }
    has_processing: { type: Boolean, require: true, index: true, default: false }
    waiting_events: [
       type: { type: String, require: true, }
@@ -55,7 +54,7 @@ teamProfileSchema.statics.createAndAttach = (user, team_id, cb) ->
       # Get team and current friends
       async.parallel 
          team: (done) ->
-            Team.findOne {"_id": team_id}, "abbreviation nickname team_key", done
+            Team.findOne {"_id": team_id}, "full_name team_key", done
          friends: (done) ->
             # return without querying if user has no friends
             return done null, [] unless user.friends?.length > 0
@@ -75,8 +74,10 @@ teamProfileSchema.statics.createAndAttach = (user, team_id, cb) ->
                   name: "#{user.first_name} #{user.last_name}"
                   team_id: results.team._id
                   team_key: results.team.team_key
-                  team_name: "#{results.team.abbreviation} #{results.team.nickname}" 
+                  team_name: results.team.full_name
                   friends: new_friends
+                  team_image_url: ""
+                  profile_image_url: ""
                }, done
             update_owner: (done) ->
                User.update {_id: user._id}, {$addToSet: {team_profiles: newId}}, done

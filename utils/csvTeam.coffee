@@ -29,12 +29,12 @@ csvTeam.parse = (data, done) ->
             running++
             Team.update { team_key: line.team_key },
                team_key: line.team_key
-               abbreviation: line.abbreviation
-               nickname: line.nickname
+               mascot: line.mascot
+               location_name: line.location_name
+               full_name: line.full_name
                stadium:
                   name: line.stadium_name
                   coords: [ line.stadium_long, line.stadium_lat ]
-               location_name: line.location_name
                sport_key: line.sport_key
                sport_name: line.sport_name
                league_key: line.league_key

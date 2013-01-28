@@ -9,7 +9,7 @@ userSchema = mongoose.Schema
    password: { type: String, required: true }
    first_name: { type: String, required: true }
    last_name: { type: String, required: true }
-   profile_image_url: { type: Url }
+   profile_image_url: { type: String, require: true }
    refresh_token: { type: String, required: true, index: { unique: true }}
    facebook_token: String
    twitter_token: String
