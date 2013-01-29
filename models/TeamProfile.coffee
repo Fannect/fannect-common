@@ -53,8 +53,8 @@ teamProfileSchema.statics.createAndAttach = (user, team_id, cb) ->
 
       # Get team and current friends
       async.parallel 
-         team: (done) ->
-            Team.findOne {"_id": team_id}, "full_name team_key", done
+         team: (done) -> Team.findById team_id, "full_name team_key", done
+         user: (done) -> User.findById user._id, "profile_image_url first_name last_name", done
          friends: (done) ->
             # return without querying if user has no friends
             return done null, [] unless user.friends?.length > 0
@@ -71,13 +71,13 @@ teamProfileSchema.statics.createAndAttach = (user, team_id, cb) ->
                context.create {
                   _id: newId
                   user_id: user._id 
-                  name: "#{user.first_name} #{user.last_name}"
+                  name: "#{results.user.first_name} #{results.user.last_name}"
                   team_id: results.team._id
                   team_key: results.team.team_key
                   team_name: results.team.full_name
                   friends: new_friends
                   team_image_url: ""
-                  profile_image_url: ""
+                  profile_image_url: results.user.profile_image_url
                }, done
             update_owner: (done) ->
                User.update {_id: user._id}, {$addToSet: {team_profiles: newId}}, done
