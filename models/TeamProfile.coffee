@@ -12,6 +12,7 @@ teamProfileSchema = mongoose.Schema
    team_id: { type: Schema.Types.ObjectId, ref: "Team", require: true, index: true }
    team_key: { type: String, require: true }
    team_name: { type: String, require: true }
+   is_college: { type: Boolean, require: true }
    points:
       overall: { type: Number, require: true, default: 0 }
       knowledge: { type: Number, require: true, default: 0 }
@@ -75,6 +76,7 @@ teamProfileSchema.statics.createAndAttach = (user, team_id, cb) ->
                   team_id: results.team._id
                   team_key: results.team.team_key
                   team_name: results.team.full_name
+                  is_college: results.team.is_college
                   friends: new_friends
                   team_image_url: ""
                   profile_image_url: results.user.profile_image_url
