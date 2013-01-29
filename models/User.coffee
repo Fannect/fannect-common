@@ -3,6 +3,7 @@ Email = mongoose.SchemaTypes.Email
 Url = mongoose.SchemaTypes.Url
 Schema = mongoose.Schema
 async = require "async"
+MongoError = require "../errors/MongoError"
 
 userSchema = mongoose.Schema
    email: { type: Email, index: { unique: true }, lowercase: true, trim: true }
@@ -24,6 +25,8 @@ userSchema.methods.acceptInvite = (other_user_id, cb) ->
    TeamProfile = require "./TeamProfile"
    user = @
 
+   cb(next(new InvalidArgumentError("Required: other_user_id"))) unless other_user_id
+
    async.parallel
       other: (done) ->
          User.findById other_user_id, "friends", done
@@ -32,10 +35,13 @@ userSchema.methods.acceptInvite = (other_user_id, cb) ->
       other_profiles: (done) -> 
          TeamProfile.find {user_id:other_user_id}, "team_id friends", done
    , (err, results) ->
+      cb(new MongoError(err)) if err
+
       other = results.other
       me_profiles = results.me_profiles
       other_profiles = results.other_profiles
 
+      user.invites.remove(other._id)
       user.friends.addToSet(other._id)
       other.friends.addToSet(user._id)
 
@@ -44,11 +50,16 @@ userSchema.methods.acceptInvite = (other_user_id, cb) ->
          (done) -> other.save(done)
       ]
 
+      console.log "user_id", user._id
+      console.log "other_id", other._id
+
       for me in me_profiles
          for otherP in other_profiles
             if me.team_id.toString() == otherP.team_id.toString()
                me.friends.addToSet(otherP._id)
                otherP.friends.addToSet(me._id)
+               console.log "me", me
+               console.log "otherP", otherP
                updated.push (done) -> me.save(done)
                updated.push (done) -> otherP.save(done)
                break

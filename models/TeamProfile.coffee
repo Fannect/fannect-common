@@ -3,7 +3,6 @@ Schema = mongoose.Schema
 User = require "./User"
 Team = require "./Team"
 async = require "async"
-DuplicateError = require "../errors/DuplicateError"
 MongoError = require "../errors/MongoError"
 
 teamProfileSchema = mongoose.Schema
@@ -50,7 +49,7 @@ teamProfileSchema.statics.createAndAttach = (user, team_id, cb) ->
    .find({user_id: user._id, team_id: team_id })
    .exec (err, data) ->
       cb(new MongoError(err)) if err
-      cb(new DuplicateError(err)) if data?.length != 0
+      cb(new RestError(409, "duplicate")) if data?.length != 0
 
       # Get team and current friends
       async.parallel 
