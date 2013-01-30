@@ -6,5 +6,6 @@ crypt = module.exports =
       hash.update password
       return hash.digest "hex"
 
-   generateAccessToken: (done) -> return crypto.randomBytes(16).toString("hex")
-   generateRefreshToken: (done) -> return crypto.randomBytes(32).toString("hex")
+   generateAccessToken: () -> return crypto.randomBytes(16).toString("hex")
+   generateRefreshToken: () -> return crypto.randomBytes(32).toString("hex")
+   generateResetToken: () -> return crypto.randomBytes(8).toString("hex")
