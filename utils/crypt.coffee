@@ -8,4 +8,4 @@ crypt = module.exports =
 
    generateAccessToken: () -> return crypto.randomBytes(16).toString("hex")
    generateRefreshToken: () -> return crypto.randomBytes(32).toString("hex")
-   generateResetToken: () -> return crypto.randomBytes(8).toString("hex")
+   generateResetToken: () -> return crypto.randomBytes(4).toString("hex")
