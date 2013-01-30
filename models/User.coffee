@@ -50,16 +50,11 @@ userSchema.methods.acceptInvite = (other_user_id, cb) ->
          (done) -> other.save(done)
       ]
 
-      console.log "user_id", user._id
-      console.log "other_id", other._id
-
       for me in me_profiles
          for otherP in other_profiles
             if me.team_id.toString() == otherP.team_id.toString()
                me.friends.addToSet(otherP._id)
                otherP.friends.addToSet(me._id)
-               console.log "me", me
-               console.log "otherP", otherP
                updated.push (done) -> me.save(done)
                updated.push (done) -> otherP.save(done)
                break

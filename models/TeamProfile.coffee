@@ -35,7 +35,7 @@ teamProfileSchema = mongoose.Schema
       meta: Schema.Types.Mixed   
       is_processing: { type: Boolean, require: true, default: false }
    ]
-   trash_talk: [
+   shouts: [
       _id: { type: Schema.Types.ObjectId, require: true }
       text: { type: String, require: true }
    ]

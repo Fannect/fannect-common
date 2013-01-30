@@ -1,12 +1,13 @@
 redis = require("../utils/redis").client
 InvalidArgumentError = require("../errors/InvalidArgumentError")
 NotAuthorizedError = require("../errors/NotAuthorizedError")
+RedisError = require("../errors/RedisError")
 
 module.exports =
    rookieStatus: (req, res, next) ->
       return unless token = hasToken(req, res, next)
       redis.get token, (err, result) ->
-         return next(err) if err
+         return next(new RedisError(err)) if err
          return next(new NotAuthorizedError("Invalid access_token")) if not result
          req.user = JSON.parse(result)
          next()
@@ -14,7 +15,7 @@ module.exports =
    subStatus: (req, res, next) ->
       return unless token = hasToken(req, res, next)
       redis.get token, (err, result) ->
-         return next(err) if err
+         return next(new RedisError(err)) if err
          return next(new NotAuthorizedError("Invalid access_token")) if not result
 
          user = JSON.parse(result)
@@ -28,7 +29,7 @@ module.exports =
    starterStatus: (req, res, next) ->
       return unless token = hasToken(req, res, next)
       redis.get token, (err, result) ->
-         return next(err) if err
+         return next(new RedisError(err)) if err
          return next(new NotAuthorizedError("Invalid access_token")) if not result
 
          user = JSON.parse(result)
@@ -42,7 +43,7 @@ module.exports =
    allstarStatus: (req, res, next) ->
       return unless token = hasToken(req, res, next)
       redis.get token, (err, result) ->
-         return next(err) if err
+         return next(new RedisError(err)) if err
          return next(new NotAuthorizedError("Invalid access_token")) if not result
 
          user = JSON.parse(result)
@@ -56,7 +57,7 @@ module.exports =
    mvpStatus: (req, res, next) ->
       return unless token = hasToken(req, res, next)
       redis.get token, (err, result) ->
-         return next(err) if err
+         return next(new RedisError(err)) if err
          return next(new NotAuthorizedError("Invalid access_token")) if not result
 
          user = JSON.parse(result)
@@ -70,7 +71,7 @@ module.exports =
    hofStatus: (req, res, next) ->
       return unless token = hasToken(req, res, next)
       redis.get token, (err, result) ->
-         return next(err) if err
+         return next(new RedisError(err)) if err
          return next(new NotAuthorizedError("Invalid access_token")) if not result
 
          user = JSON.parse(result)
