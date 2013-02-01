@@ -8,6 +8,7 @@ teamSchema = mongoose.Schema
    location_name: { type: String, require: true }
    full_name: { type: String, require: true, index: { unique: true } }
    stadium: 
+      stadium_id: { type: String, require: true }
       name: { type: String, require: true }
       coords: [ type: Number ]
    sport_key: { type: String, require: true, index: true }
@@ -25,5 +26,40 @@ teamSchema = mongoose.Schema
       passion: { type: Number, require: true, default: 0 }
       dedication: { type: Number, require: true, default: 0 }
    is_college: { type: Boolean, require: true }
+   schedule:
+      season: [
+         {
+            game_time: { type: Date, index: true }
+            opponent: { type: String }
+            opponent_id: { type: Schema.Types.ObjectId, ref: "Team" }
+            stadium_id: { type: String }
+            stadium_name: { type: String }
+            stadium_coords [ type: Number ]
+            is_home: { type: Boolean }
+            coverage: { type: String }
+            event_key: { type: String }
+         }
+      ]
+      pregame: 
+         game_time: { type: Date index: true }
+         opponent: { type: String }
+         opponent_id: { type: Schema.Types.ObjectId, ref: "Team" }
+         stadium_id: { type: String }
+         stadium_name: { type: String } 
+         stadium_coords [ type: Number ]
+         is_home: { type: Boolean }
+         coverage: { type: String }
+         preview: { type: String }
+         record: { type: String }
+         opponent_record: { type: String }
+         event_key: { type: String }
+      postgame: 
+         game_time: { type: Date, index: true }
+         opponent: { type: String }
+         opponent_id: { type: Schema.Types.ObjectId, ref: "Team" }
+         is_home: { type: Boolean }
+         score: { type: Number }
+         opponent_score: { type: Number }
+         won: { type: Boolean }
 
 module.exports = mongoose.model("Team", teamSchema)
