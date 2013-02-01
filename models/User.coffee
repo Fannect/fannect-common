@@ -14,7 +14,7 @@ userSchema = mongoose.Schema
    refresh_token: { type: String, required: true, index: { unique: true }}
    facebook_token: String
    twitter_token: String
-   friends: [{ type: Schema.Types.ObjectId, ref: "User" }]
+   friends: [{ type: Schema.Types.ObjectId, ref: "User", index: true }]
    team_profiles: [{ type: Schema.Types.ObjectId, ref: "TeamProfile" }]
    role: String
    invites: [{ type: Schema.Types.ObjectId, ref: "User" }]

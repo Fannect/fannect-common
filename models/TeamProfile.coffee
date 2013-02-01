@@ -4,6 +4,7 @@ User = require "./User"
 Team = require "./Team"
 async = require "async"
 MongoError = require "../errors/MongoError"
+RestError = require "../errors/RestError"
 
 teamProfileSchema = mongoose.Schema
    user_id: { type: Schema.Types.ObjectId, ref: "User", require: true, index: true }
@@ -17,7 +18,7 @@ teamProfileSchema = mongoose.Schema
       knowledge: { type: Number, require: true, default: 0 }
       passion: { type: Number, require: true, default: 0 }
       dedication: { type: Number, require: true, default: 0 }
-   friends: [{ type: Schema.Types.ObjectId, index: true }]
+   friends: [{ type: Schema.Types.ObjectId, index: true, ref: "TeamProfile" }]
    events: [
       type: { type: String, require: true, }
       points_earned: 
@@ -48,8 +49,8 @@ teamProfileSchema.statics.createAndAttach = (user, team_id, cb) ->
    context
    .find({user_id: user._id, team_id: team_id })
    .exec (err, data) ->
-      cb(new MongoError(err)) if err
-      cb(new RestError(409, "duplicate")) if data?.length != 0
+      return cb(new MongoError(err)) if err
+      return cb(new RestError(409, "duplicate")) if data?.length != 0
 
       # Get team and current friends
       async.parallel 
