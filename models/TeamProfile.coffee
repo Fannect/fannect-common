@@ -6,7 +6,7 @@ async = require "async"
 MongoError = require "../errors/MongoError"
 RestError = require "../errors/RestError"
 
-teamProfileSchema = mongoose.Schema
+teamProfileSchema = new mongoose.Schema
    user_id: { type: Schema.Types.ObjectId, ref: "User", require: true, index: true }
    name: { type: String, require: true, index: true }
    team_id: { type: Schema.Types.ObjectId, ref: "Team", require: true, index: true }
@@ -40,6 +40,7 @@ teamProfileSchema = mongoose.Schema
       _id: { type: Schema.Types.ObjectId, require: true }
       text: { type: String, require: true }
    ]
+
 
 teamProfileSchema.statics.createAndAttach = (user, team_id, cb) ->
    context = @

@@ -5,7 +5,7 @@ Schema = mongoose.Schema
 async = require "async"
 MongoError = require "../errors/MongoError"
 
-userSchema = mongoose.Schema
+userSchema = new mongoose.Schema
    email: { type: Email, index: { unique: true }, lowercase: true, trim: true }
    password: { type: String, required: true }
    first_name: { type: String, required: true }

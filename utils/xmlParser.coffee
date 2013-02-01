@@ -8,10 +8,11 @@ parser = module.exports =
    schedule:
       parseGames: (doc) -> doc["xts:sports-content-set"]["sports-content"][0]["schedule"][0]["sports-event"]
       _parseMeta: (game) -> game["event-metadata"][0]
-      _parseCoverage: (meta) -> return meta["sports-property"][0]["$"]["value"]
-      _parseStadiumKey: (meta) -> return meta["site"][0]["site-metadata"][0]["$"]["site-key"]               
+      _parseCoverage: (meta) -> meta["sports-property"][0]["$"]["value"]
+      _parseStadiumKey: (meta) -> meta["site"][0]["site-metadata"][0]["$"]["site-key"]               
       _parseStartTime: (meta) -> parser.schedule._parseDate(meta["$"]["start-date-time"])
-      _parseTeamKey: (team) -> return team["team-metadata"][0]["$"]["team-key"]
+      _parseStatus: (meta) -> meta["$"]["event-status"]
+      _parseTeamKey: (team) -> team["team-metadata"][0]["$"]["team-key"]
       _parseAwayTeamKey: (teams) -> parser.schedule._parseTeamKey(teams[0])
       _parseHomeTeamKey: (teams) -> parser.schedule._parseTeamKey(teams[1])
       _parseEventKey: (meta) -> meta["$"]["event-key"]
@@ -38,6 +39,7 @@ parser = module.exports =
             home_key: parser.schedule._parseHomeTeamKey(teams)
             stadium_key: parser.schedule._parseStadiumKey(meta)
             coverage: parser.schedule._parseCoverage(meta)
+            is_past: parser.schedule._parseStatus(meta) == "post-event"
          }
 
    preview:
