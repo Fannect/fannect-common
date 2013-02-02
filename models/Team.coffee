@@ -2,7 +2,6 @@ mongoose = require "mongoose"
 Schema = mongoose.Schema
 
 teamSchema = new mongoose.Schema
-   _id: { type: Schema.Types.ObjectId, require: true, index: { unique: true } }
    team_key: { type: String, require: true }
    mascot: { type: String, require: true }
    location_name: { type: String, require: true }
@@ -41,19 +40,20 @@ teamSchema = new mongoose.Schema
          }
       ]
       pregame: 
-         opponent: { type: String }
+         event_key: { type: String }
          game_time: { type: Date, index: true }
+         opponent: { type: String }
          opponent_id: { type: Schema.Types.ObjectId, ref: "Team" }
          stadium_id: { type: String }
          stadium_name: { type: String } 
          stadium_coords: [ Number ]
          is_home: { type: Boolean }
          coverage: { type: String }
-         preview: { type: String }
+         preview: [{ type: String }]
          record: { type: String }
          opponent_record: { type: String }
-         event_key: { type: String }
       postgame: 
+         event_key: { type: String }
          game_time: { type: Date, index: true }
          opponent: { type: String }
          opponent_id: { type: Schema.Types.ObjectId, ref: "Team" }
@@ -61,5 +61,6 @@ teamSchema = new mongoose.Schema
          score: { type: Number }
          opponent_score: { type: Number }
          won: { type: Boolean }
+         attendance: { type: Number }
 
 module.exports = mongoose.model("Team", teamSchema)

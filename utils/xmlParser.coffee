@@ -6,16 +6,16 @@ parser = module.exports =
       xmlParser.parseString xml, done
 
    schedule:
-      parseGames: (doc) -> doc["xts:sports-content-set"]["sports-content"][0]["schedule"][0]["sports-event"]
-      _parseMeta: (game) -> game["event-metadata"][0]
-      _parseCoverage: (meta) -> meta["sports-property"][0]["$"]["value"]
-      _parseStadiumKey: (meta) -> meta["site"][0]["site-metadata"][0]["$"]["site-key"]               
-      _parseStartTime: (meta) -> parser.schedule._parseDate(meta["$"]["start-date-time"])
-      _parseStatus: (meta) -> meta["$"]["event-status"]
-      _parseTeamKey: (team) -> team["team-metadata"][0]["$"]["team-key"]
+      parseGames: (doc) -> doc?["xts:sports-content-set"]?["sports-content"]?[0]?["schedule"]?[0]?["sports-event"]
+      _parseMeta: (game) -> game?["event-metadata"]?[0]
+      _parseCoverage: (meta) -> meta?["sports-property"]?[0]?["$"]?["value"]
+      _parseStadiumKey: (meta) -> meta?["site"]?[0]?["site-metadata"]?[0]?["$"]?["site-key"]               
+      _parseStartTime: (meta) -> parser.schedule._parseDate(meta["$"]?["start-date-time"])
+      _parseStatus: (meta) -> meta["$"]?["event-status"]
+      _parseTeamKey: (team) -> team["team-metadata"]?[0]?["$"]?["team-key"]
       _parseAwayTeamKey: (teams) -> parser.schedule._parseTeamKey(teams[0])
       _parseHomeTeamKey: (teams) -> parser.schedule._parseTeamKey(teams[1])
-      _parseEventKey: (meta) -> meta["$"]["event-key"]
+      _parseEventKey: (meta) -> meta["$"]?["event-key"]
       _parseTeams: (game) -> game["team"]
       _parseDate: (dateString) ->
          y = dateString.substring(0,4)
@@ -43,9 +43,9 @@ parser = module.exports =
          }
 
    preview:
-      parseArticles: (doc) -> doc["xts:sports-content-set"]["sports-content"]
-      _parseEventKey: (article) -> article["sports-event"][0]["event-metadata"][0]["$"]["event-key"]
-      _parsePreview: (article) -> article["article"][0]["nitf"][0]["body"][0]["body.content"][0]["p"]
+      parseArticles: (doc) -> doc?["xts:sports-content-set"]?["sports-content"]
+      _parseEventKey: (article) -> article?["sports-event"]?[0]?["event-metadata"]?[0]?["$"]?["event-key"]
+      _parsePreview: (article) -> article?["article"]?[0]?["nitf"]?[0]?["body"]?[0]?["body.content"]?[0]?["p"]
 
       parseArticleToJson: (article) ->
          return {
@@ -55,13 +55,13 @@ parser = module.exports =
 
    boxScores:
       parseBoxScoreToJson: (doc) ->
-         sportsEvent = doc["xts:sports-content-set"]["sports-content"][0]["sports-event"]
-         teamStats = sportsEvent[0]["team"][0]["team-stats"][0]["$"]
+         sportsEvent = doc?["xts:sports-content-set"]?["sports-content"]?[0]?["sports-event"]
+         teamStats = sportsEvent?[0]?["team"]?[0]?["team-stats"]?[0]?["$"]
          return {
-            attendance: sportsEvent[0]["event-metadata"][0]["site"][0]["site-stats"][0]["$"]["attendance"]
-            won: teamStats["event-outcome"] != "loss"
-            score: parseInt(teamStats["score"])
-            opponent_score: parseInt(teamStats["score-opposing"])
+            attendance: sportsEvent?[0]?["event-metadata"]?[0]?["site"]?[0]?["site-stats"]?[0]?["$"]?["attendance"]
+            won: teamStats?["event-outcome"] != "loss"
+            score: parseInt(teamStats?["score"])
+            opponent_score: parseInt(teamStats?["score-opposing"])
          }
 
 
