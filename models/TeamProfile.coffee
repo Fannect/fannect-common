@@ -6,6 +6,15 @@ async = require "async"
 MongoError = require "../errors/MongoError"
 RestError = require "../errors/RestError"
 
+eventSchema = new mongoose.Schema
+   date: { type: Date, require: true }
+   type: { type: String, require: true }
+   points_earned:
+      passion: { type: Number, require: true }
+      dedication: { type: Number, require: true }
+      knowledge: { type: Number, require: true }
+   meta: Schema.Types.Mixed
+
 teamProfileSchema = new mongoose.Schema
    user_id: { type: Schema.Types.ObjectId, ref: "User", require: true, index: true }
    name: { type: String, require: true, index: true }
@@ -19,15 +28,7 @@ teamProfileSchema = new mongoose.Schema
       passion: { type: Number, require: true, default: 0 }
       dedication: { type: Number, require: true, default: 0 }
    friends: [{ type: Schema.Types.ObjectId, index: true, ref: "TeamProfile" }]
-   events: [
-      type: { type: String, require: true, }
-      points_earned: 
-         overall: { type: Number, require: true, default: 0 }
-         knowledge: { type: Number, require: true, default: 0 }
-         passion: { type: Number, require: true, default: 0 }
-         dedication: { type: Number, require: true, default: 0 }
-      meta: Schema.Types.Mixed
-   ]
+   events: [ eventSchema ]
    team_image_url: { type: String, require: true }
    profile_image_url: { type: String, require: true }
    has_processing: { type: Boolean, require: true, index: true, default: false }
@@ -40,6 +41,7 @@ teamProfileSchema = new mongoose.Schema
       _id: { type: Schema.Types.ObjectId, require: true }
       text: { type: String, require: true }
    ]
+
 
 
 teamProfileSchema.statics.createAndAttach = (user, team_id, cb) ->
