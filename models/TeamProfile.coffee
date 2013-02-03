@@ -33,9 +33,9 @@ teamProfileSchema = new mongoose.Schema
    profile_image_url: { type: String, require: true }
    has_processing: { type: Boolean, require: true, index: true, default: false }
    waiting_events: [
+      date: { type: Date, require: true }
       type: { type: String, require: true, }
-      meta: Schema.Types.Mixed   
-      is_processing: { type: Boolean, require: true, default: false }
+      meta: Schema.Types.Mixed
    ]
    shouts: [
       _id: { type: Schema.Types.ObjectId, require: true }

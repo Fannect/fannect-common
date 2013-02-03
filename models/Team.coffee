@@ -35,6 +35,7 @@ teamSchema = new mongoose.Schema
             stadium_id: { type: String }
             stadium_name: { type: String }
             stadium_coords: [ type: Number ]
+            stadium_location: { type: String }
             is_home: { type: Boolean }
             coverage: { type: String }
          }
@@ -46,6 +47,7 @@ teamSchema = new mongoose.Schema
          opponent_id: { type: Schema.Types.ObjectId, ref: "Team" }
          stadium_id: { type: String }
          stadium_name: { type: String } 
+         stadium_location: { type: String }
          stadium_coords: [ Number ]
          is_home: { type: Boolean }
          coverage: { type: String }
