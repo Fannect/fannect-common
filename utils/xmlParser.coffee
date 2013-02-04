@@ -5,6 +5,15 @@ parser = module.exports =
    parse: (xml, done) ->
       xmlParser.parseString xml, done
 
+   isEmpty: (doc) ->
+      return false if not doc?["xts:sports-content-set"]
+
+      count = 0
+      for k, v of doc?["xts:sports-content-set"]
+         count++ if k != "$"
+      
+      return count == 0
+
    schedule:
       parseGames: (doc) -> doc?["xts:sports-content-set"]?["sports-content"]?[0]?["schedule"]?[0]?["sports-event"]
       _parseMeta: (game) -> game?["event-metadata"]?[0]
