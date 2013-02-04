@@ -14,9 +14,7 @@ stadiumSchema.statics.createAndAttach = (newStadium, cb) ->
    Team = require "./Team"
    context = @
 
-
    team_key = newStadium.team_key
-   console.log team_key
    newStadium.stadium_key = newStadium.stadium_key or newStadium.key
 
    if not (newStadium.lng or newStadium.lat)
@@ -51,6 +49,6 @@ stadiumSchema.statics.createAndAttach = (newStadium, cb) ->
             stadium: (done) -> stadium.save(done)
          , cb
    else      
-      context.update { stadium_key: newStadium.key }, newStadium, { upsert: true }, cb
+      context.update { stadium_key: newStadium.stadium_key }, newStadium, { upsert: true }, cb
 
 Stadium = module.exports = mongoose.model("Stadium", stadiumSchema)
