@@ -16,7 +16,7 @@ userSchema = new mongoose.Schema
    twitter_token: String
    friends: [{ type: Schema.Types.ObjectId, ref: "User", index: true }]
    team_profiles: [{ type: Schema.Types.ObjectId, ref: "TeamProfile" }]
-   role: String
+   role: { type: String, default: "rookie" }
    invites: [{ type: Schema.Types.ObjectId, ref: "User" }]
    reload_stream: String
 
