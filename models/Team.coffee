@@ -30,7 +30,7 @@ teamSchema = new mongoose.Schema
       season: [
          {
             event_key: { type: String }
-            game_time: { type: Date, index: true }
+            game_time: { type: Date }
             opponent: { type: String }
             opponent_id: { type: Schema.Types.ObjectId, ref: "Team" }
             stadium_id: { type: String }
@@ -57,7 +57,7 @@ teamSchema = new mongoose.Schema
          opponent_record: { type: String }
       postgame: 
          event_key: { type: String }
-         game_time: { type: Date, index: true }
+         game_time: { type: Date }
          opponent: { type: String }
          opponent_id: { type: Schema.Types.ObjectId, ref: "Team" }
          is_home: { type: Boolean }
