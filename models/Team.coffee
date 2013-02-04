@@ -1,5 +1,6 @@
 mongoose = require "mongoose"
 Schema = mongoose.Schema
+Stadium = require "./Stadium"
 
 teamSchema = new mongoose.Schema
    team_key: { type: String, require: true }
@@ -65,4 +66,37 @@ teamSchema = new mongoose.Schema
          won: { type: Boolean }
          attendance: { type: Number }
 
+teamSchema.statics.createAndAttach = (newTeam, cb) ->
+   context = @
+
+   delete newTeam._id 
+
+   key = newTeam.stadium_key or newTeam.stadium.key or newTeam.stadium.stadium_key
+
+   if key
+      Stadium.findOne { key: newTeam.stadium.stadium_key }, (err, stadium) ->
+         return cb(err) if err
+
+         # Remove stadium key that is not needed
+         delete newTeam.stadium_key
+         delete newTeam.stadium.key
+         delete newTeam.stadium.stadium_key
+
+         if stadium
+            newTeam.stadium = {} unless newTeam.stadium
+            newTeam.stadium.stadium_id = stadium._id
+            newTeam.stadium.name = stadium.name
+            newTeam.stadium.location = stadium.location
+            newTeam.stadium.location = stadium.location
+            newTeam.stadium.coords = stadium.coords
+         
+         context.update { team_key: newTeam.team_key }, newTeam, { upsert: true }, cb
+   else      
+      context.update { team_key: newTeam.team_key }, newTeam, { upsert: true }, cb
+
+
 module.exports = mongoose.model("Team", teamSchema)
+
+
+
+

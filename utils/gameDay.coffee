@@ -25,12 +25,24 @@ gameDay = module.exports =
       
          Team
          .findById(profile.team_id)
-         .select("full_name schedule.pregame")
+         .select("full_name stadium schedule.pregame")
          .exec (err, team) ->
             return done(new MongoError(err)) if err
 
+            if not team.schedule?.pregame?.game_time
+               return done null, 
+                  available: false
+                  home_team:
+                     name: team.full_name
+                  stadium:
+                     name: team.stadium?.name
+                     location: team.stadium?.location
+                     lat: team.stadium?.coords[1]
+                     lng: team.stadium?.coords[0]
+
             gameInfo =
                game_time: team.schedule.pregame.game_time
+               available: false
                home_team:
                   name: team.full_name
                away_team:
@@ -47,7 +59,6 @@ gameDay = module.exports =
 
             if now > team.schedule.pregame.game_time
                # game is being played
-               gameInfo.available = false
                done null, gameInfo
             else if gameDay.sameDay(now, gameTime)
                # game is today but not yet happening
@@ -62,7 +73,6 @@ gameDay = module.exports =
                done null, gameInfo
             else
                # no game today
-               gameInfo.available = false
                done null, gameInfo
             
    post: (profileId, options, done) ->

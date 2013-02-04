@@ -3,14 +3,14 @@ mongoose = require "mongoose"
 csv = require "csv"
 Team = require "../models/Team"
 MongoError = require "../errors/MongoError"
+Stadium = require "../models/Stadium"
 
-
-csvTeam = module.exports = (file_path, done) -> 
+csvParser = module.exports = (file_path, done) -> 
    fs.readFile file_path, "utf8", (err, data) ->
       done(err) if err
-      csvTeam.parse data, done
+      csvParser.parse data, done
 
-csvTeam.parse = (data, done) ->
+csvParser.parseTeams = (data, done) ->
    headers = null
    count = 0
    running = 0
@@ -27,7 +27,8 @@ csvTeam.parse = (data, done) ->
 
          if line.activate == "a"
             running++
-            Team.update { team_key: line.team_key },
+
+            newTeam =
                team_key: line.team_key
                mascot: line.mascot
                location_name: line.location_name
@@ -42,8 +43,48 @@ csvTeam.parse = (data, done) ->
                conference_key: line.conference_key
                conference_name: line.conference_name
                is_college: line.college == "c"
-            , { upsert: true, multi: true }
-            , (err) ->
+            
+            Team.createAndAttach newTeam, (err) ->
+               errors.push(new MongoError(err)) if err
+               count++
+               if --running == 0
+                  error = if errors.length > 0 then errors else null
+                  done(error, count)
+   )
+   .on("end", () ->
+      if running == 0
+         error = if errors.length > 0 then errors else null
+         done(error, count)
+   )
+
+csvParser.parseStadiums = (data, done) ->
+   headers = null
+   count = 0
+   running = 0
+   errors = []
+
+   csv()   
+   .from(data)
+   .on("record", (data, index) ->
+      # set header row
+      if index == 0
+         headers = data
+      else
+         line = parseRowIntoObject(headers, data)
+
+         if line.activate == "a"
+            running++
+
+            newStadium =
+               team_key: line.team_key
+               stadium_key: line.stadium_key
+               name: line.name
+               location: line.location
+               lat: line.lat
+               lng: line.lng
+
+            Stadium
+            .createAndAttach newStadium, (err) ->
                errors.push(new MongoError(err)) if err
                count++
                if --running == 0
