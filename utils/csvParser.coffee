@@ -67,6 +67,7 @@ csvParser.parseStadiums = (data, done) ->
    .from(data)
    .on("record", (data, index) ->
       # set header row
+      
       if index == 0
          headers = data
       else
@@ -80,8 +81,8 @@ csvParser.parseStadiums = (data, done) ->
                stadium_key: line.stadium_key
                name: line.name
                location: line.location
-               lat: line.lat
-               lng: line.lng
+               lat: line.lat or line.stadium_lat
+               lng: line.lng or line.stadium_long or line.stadium_lng
 
             Stadium
             .createAndAttach newStadium, (err) ->

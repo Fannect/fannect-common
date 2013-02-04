@@ -17,6 +17,9 @@ stadiumSchema.statics.createAndAttach = (newStadium, cb) ->
    team_key = newStadium.team_key
    newStadium.stadium_key = newStadium.stadium_key or newStadium.key
 
+   if not (newStadium.lng or newStadium.lat)
+      return cb(new Error(code: "no lat or lng", message: newStadium))
+
    newStadium.coords = [ newStadium.lng, newStadium.lat ]
    delete newStadium._id
    delete newStadium.team_key
@@ -46,6 +49,6 @@ stadiumSchema.statics.createAndAttach = (newStadium, cb) ->
             stadium: (done) -> stadium.save(done)
          , cb
    else      
-      context.update { key: newStadium.key }, newStadium, { upsert: true }, cb
+      context.update { stadium_key: newStadium.key }, newStadium, { upsert: true }, cb
 
 Stadium = module.exports = mongoose.model("Stadium", stadiumSchema)
