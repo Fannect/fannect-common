@@ -6,7 +6,7 @@ teamSchema = new mongoose.Schema
    team_key: { type: String, require: true }
    mascot: { type: String, require: true }
    location_name: { type: String, require: true }
-   full_name: { type: String, require: true, index: { unique: true } }
+   full_name: { type: String, require: true }
    stadium: 
       stadium_id: { type: String, require: true }
       name: { type: String, require: true }

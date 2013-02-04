@@ -4,7 +4,7 @@ async = require "async"
 
 stadiumSchema = new mongoose.Schema(
    {
-      stadium_key: { type: String, require: true }
+      stadium_key: { type: String, require: true, index: { unique: true } }
       name: { type: String, require: true }
       location: { type: String }
       coords: [ type: Number ]
