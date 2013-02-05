@@ -9,6 +9,7 @@ auth = module.exports =
       return unless token = hasToken(req, res, next)
       auth.getUser token, (err, user) ->
          return next(err) if err
+         req.user = user
          next()
 
    subStatus: (req, res, next) ->
@@ -83,13 +84,19 @@ auth = module.exports =
          return done(new RedisError(err)) if err
          
          if result == 0
+            # If access_token already exsits then try again
             auth.createAccessToken(user, done)
          else
             # Set expiration
             redis.client.expire access_token, 1800
 
-            # If access_token already exsits then try again
             done null, access_token
+
+   updateUser: (access_token, user, done) ->
+      redis.client.set access_token, JSON.stringify(user), (err, result) ->
+         return done(new RedisError(err)) if err
+         redis.client.expire access_token, 1800
+         done null, access_token
 
 hasToken = (req, res, next) ->
    if not token = req.query?.access_token
