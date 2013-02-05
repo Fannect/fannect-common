@@ -79,8 +79,8 @@ csvParser.parseStadiums = (data, done) ->
             newStadium =
                team_key: line.team_key
                stadium_key: line.stadium_key
-               name: line.name
-               location: line.location
+               name: line.name or line.stadium_name
+               location: line.location or line.stadium_location
                lat: line.lat or line.stadium_lat
                lng: line.lng or line.stadium_long or line.stadium_lng
 
