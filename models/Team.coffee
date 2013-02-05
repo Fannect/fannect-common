@@ -52,7 +52,7 @@ teamSchema = new mongoose.Schema
          stadium_coords: [ Number ]
          is_home: { type: Boolean }
          coverage: { type: String }
-         preview: [{ type: String }]
+         preview: { type: String }
          record: { type: String }
          opponent_record: { type: String }
       postgame: 

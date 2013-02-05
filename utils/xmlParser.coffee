@@ -5,6 +5,15 @@ parser = module.exports =
    parse: (xml, done) ->
       xmlParser.parseString xml, done
 
+   isEmpty: (doc) ->
+      return false if not doc?["xts:sports-content-set"]
+
+      count = 0
+      for k, v of doc?["xts:sports-content-set"]
+         count++ if k != "$"
+      
+      return count == 0
+
    schedule:
       parseGames: (doc) -> doc?["xts:sports-content-set"]?["sports-content"]?[0]?["schedule"]?[0]?["sports-event"]
       _parseMeta: (game) -> game?["event-metadata"]?[0]
@@ -58,6 +67,7 @@ parser = module.exports =
          sportsEvent = doc?["xts:sports-content-set"]?["sports-content"]?[0]?["sports-event"]
          teamStats = sportsEvent?[0]?["team"]?[0]?["team-stats"]?[0]?["$"]
          return {
+            is_past: sportsEvent?[0]?["event-metadata"]?[0]?["$"]?["event-status"] == "post-event"
             attendance: sportsEvent?[0]?["event-metadata"]?[0]?["site"]?[0]?["site-stats"]?[0]?["$"]?["attendance"]
             won: teamStats?["event-outcome"] != "loss"
             score: parseInt(teamStats?["score"])
