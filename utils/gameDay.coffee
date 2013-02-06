@@ -53,12 +53,14 @@ gameDay = module.exports =
                   lat: team.schedule.pregame.stadium_coords[1]
                   lng: team.schedule.pregame.stadium_coords[0]
                preview: team.schedule.pregame.preview
+               in_progress: false
             
             now = new Date()
             gameTime = team.schedule.pregame.game_time
 
             if now > team.schedule.pregame.game_time
                # game is being played
+               gameInfo.in_progress = true
                done null, gameInfo
             else if gameDay.sameDay(now, gameTime)
                # game is today but not yet happening
@@ -105,8 +107,14 @@ gameDay = module.exports =
                   type: options.gameType
                   meta: options.meta
 
+               console.log "waiting_events", profile.waiting_events
+
                profile.save (err) ->
                   return done(new MongoError(err)) if err      
                   done null, status: "success"
             else
                done(new RestError("invalid_time", "Cannot set #{options.gameType} after game has happened or not on a game day"))
+
+
+
+
