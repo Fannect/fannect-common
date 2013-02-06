@@ -56,7 +56,7 @@ teamProfileSchema.statics.createAndAttach = (user, team_id, cb) ->
 
       # Get team and current friends
       async.parallel 
-         team: (done) -> Team.findById team_id, "full_name team_key", done
+         team: (done) -> Team.findById team_id, "full_name team_key is_college", done
          user: (done) -> User.findById user._id, "profile_image_url first_name last_name", done
          friends: (done) ->
             # return without querying if user has no friends

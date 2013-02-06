@@ -29,7 +29,9 @@ gameDay = module.exports =
          .exec (err, team) ->
             return done(new MongoError(err)) if err
 
-            if not team.schedule?.pregame?.game_time
+            game = team.schedule?.pregame
+
+            if not game?.game_time
                return done null, 
                   available: false
                   home_team:
@@ -41,12 +43,13 @@ gameDay = module.exports =
                      lng: team.stadium?.coords[0]
 
             gameInfo =
-               game_time: team.schedule.pregame.game_time
+               game_time: game.game_time
                available: false
+               is_home: game.is_home
                home_team:
-                  name: team.full_name
+                  name: if game.is_home then team.full_name else game.opponent
                away_team:
-                  name: team.schedule.pregame.opponent
+                  name: if game.is_home then game.opponent else team.full_name
                stadium:
                   name: team.schedule.pregame.stadium_name
                   location: team.schedule.pregame.stadium_location
@@ -106,8 +109,6 @@ gameDay = module.exports =
                   date: now
                   type: options.gameType
                   meta: options.meta
-
-               console.log "waiting_events", profile.waiting_events
 
                profile.save (err) ->
                   return done(new MongoError(err)) if err      
