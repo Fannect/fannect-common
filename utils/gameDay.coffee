@@ -6,9 +6,6 @@ RestError = require "../errors/RestError"
 
 gameDay = module.exports = 
 
-   sameDay: (d1, d2) ->
-      return d1.getDate() == d2.getDate() and d1.getMonth() == d2.getMonth() and d1.getFullYear() == d2.getFullYear()
-
    #
    # options
    #  gameType = type of the game
@@ -58,14 +55,14 @@ gameDay = module.exports =
                preview: team.schedule.pregame.preview
                in_progress: false
             
-            now = new Date()
-            gameTime = team.schedule.pregame.game_time
+            now = new Date() / 1
+            gameTime = team.schedule.pregame.game_time / 1
 
-            if now > team.schedule.pregame.game_time
+            if now > gameTime
                # game is being played
                gameInfo.in_progress = true
                done null, gameInfo
-            else if gameDay.sameDay(now, gameTime)
+            else if now > gameTime - 1000*60*60*24
                # game is today but not yet happening
                gameInfo.available = true
 
