@@ -8,9 +8,9 @@ teamSchema = new mongoose.Schema
    location_name: { type: String, require: true }
    full_name: { type: String, require: true }
    stadium: 
-      stadium_id: { type: String, require: true }
-      name: { type: String, require: true }
-      location: { type: String, require: true }
+      stadium_id: { type: String }
+      name: { type: String }
+      location: { type: String }
       coords: [ Number ]
    sport_key: { type: String, require: true, index: true }
    sport_name: { type: String, require: true }
@@ -71,7 +71,7 @@ teamSchema.statics.createAndAttach = (newTeam, cb) ->
 
    delete newTeam._id 
 
-   key = newTeam.stadium_key or newTeam.stadium.key or newTeam.stadium.stadium_key
+   key = newTeam.stadium_key or newTeam.stadium?.key or newTeam.stadium?.stadium_key
 
    if key
       Stadium.findOne { key: newTeam.stadium.stadium_key }, (err, stadium) ->

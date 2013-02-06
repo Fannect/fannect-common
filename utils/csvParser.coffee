@@ -33,9 +33,9 @@ csvParser.parseTeams = (data, done) ->
                mascot: line.mascot
                location_name: line.location_name
                full_name: line.full_name
-               stadium:
-                  name: line.stadium_name
-                  coords: [ line.stadium_long, line.stadium_lat ]
+               # stadium:
+               #    name: line.stadium_name
+               #    coords: [ line.stadium_long, line.stadium_lat ]
                sport_key: line.sport_key
                sport_name: line.sport_name
                league_key: line.league_key
