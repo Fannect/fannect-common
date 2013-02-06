@@ -41,10 +41,10 @@ stadiumSchema.statics.createAndAttach = (newStadium, cb) ->
          async.parallel 
             team: (done) ->
                Team.update { team_key: team_key }
-                  "team.stadium.stadium_id": stadium._id
-                  "team.stadium.name": stadium.name
-                  "team.stadium.location": stadium.location
-                  "team.stadium.coords": stadium.coords
+                  "stadium.stadium_id": stadium._id
+                  "stadium.name": stadium.name
+                  "stadium.location": stadium.location
+                  "stadium.coords": stadium.coords
                , done
             stadium: (done) -> stadium.save(done)
          , cb
