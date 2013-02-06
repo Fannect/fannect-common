@@ -39,8 +39,8 @@ gameDay = module.exports =
                   stadium:
                      name: team.stadium?.name
                      location: team.stadium?.location
-                     lat: team.stadium?.coords[1]
-                     lng: team.stadium?.coords[0]
+                     lat: team.stadium?.coords?[1]
+                     lng: team.stadium?.coords?[0]
 
             gameInfo =
                game_time: game.game_time
