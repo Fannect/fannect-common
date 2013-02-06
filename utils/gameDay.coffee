@@ -62,7 +62,7 @@ gameDay = module.exports =
                # game is being played
                gameInfo.in_progress = true
                done null, gameInfo
-            else if now > gameTime - 1000*60*60*24
+            else if now > gameTime - 1000*60*60*12
                # game is today but not yet happening
                gameInfo.available = true
 
@@ -93,10 +93,10 @@ gameDay = module.exports =
          .exec (err, team) ->
             return done(new MongoError(err)) if err
 
-            now = new Date()
-            gameTime = team.schedule.pregame.game_time
+            now = new Date() / 1
+            gameTime = team.schedule.pregame.game_time / 1
 
-            if now < gameTime and gameDay.sameDay(now, gameTime)
+            if now < gameTime and now > gameTime - 1000*60*60*12
                # game is today but not yet happening
                for ev in profile.waiting_events
                   if ev.type == options.gameType
