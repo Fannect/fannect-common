@@ -27,7 +27,9 @@ teamProfileSchema = new mongoose.Schema
       knowledge: { type: Number, require: true, default: 0 }
       passion: { type: Number, require: true, default: 0 }
       dedication: { type: Number, require: true, default: 0 }
+   rank: { type: Number, default: 0 }
    friends: [{ type: Schema.Types.ObjectId, index: true, ref: "TeamProfile" }]
+   friends_count: { type: Number, default: 0 }
    events: [ eventSchema ]
    team_image_url: { type: String, require: true }
    profile_image_url: { type: String, require: true }
@@ -40,8 +42,6 @@ teamProfileSchema = new mongoose.Schema
       _id: { type: Schema.Types.ObjectId, require: true }
       text: { type: String, require: true }
    ]
-
-
 
 teamProfileSchema.statics.createAndAttach = (user, team_id, cb) ->
    context = @
@@ -63,7 +63,7 @@ teamProfileSchema.statics.createAndAttach = (user, team_id, cb) ->
             return done null, [] unless user.friends?.length > 0
             context
             .find({ team_id: team_id, user_id: { $in: user.friends }})
-            .select("friends")
+            .select("friends friends_count")
             .exec(done)
       , (err, results) ->
          return cb(new MongoError(err)) if err
@@ -80,6 +80,7 @@ teamProfileSchema.statics.createAndAttach = (user, team_id, cb) ->
                   team_name: results.team.full_name
                   is_college: results.team.is_college
                   friends: new_friends
+                  friends_count: new_friends.length
                   team_image_url: ""
                   profile_image_url: results.user.profile_image_url
                }, done
@@ -88,9 +89,11 @@ teamProfileSchema.statics.createAndAttach = (user, team_id, cb) ->
 
          # Swap team profile ids
          for p in results.friends
-            p.friends.addToSet(newId)
-            new_friends.push(p._id)
-            updated[p._id] = (done) -> p.save(done)
+            do (profile = p) ->
+               profile.friends.addToSet(newId)
+               profile.friends_count++
+               new_friends.push(profile._id)
+               updated[profile._id] = (done) -> profile.save(done)
 
          # Save all changes
          async.parallel updated, (err, result) ->

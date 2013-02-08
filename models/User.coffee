@@ -18,6 +18,9 @@ userSchema = new mongoose.Schema
    team_profiles: [{ type: Schema.Types.ObjectId, ref: "TeamProfile" }]
    role: { type: String, default: "rookie" }
    invites: [{ type: Schema.Types.ObjectId, ref: "User" }]
+   push:
+      game_notice: { type: Boolean }
+      points_notice: { type: Boolean }
    reload_stream: String
 
 userSchema.methods.acceptInvite = (other_user_id, cb) ->
@@ -31,9 +34,9 @@ userSchema.methods.acceptInvite = (other_user_id, cb) ->
       other: (done) ->
          User.findById other_user_id, "friends", done
       me_profiles: (done) -> 
-         TeamProfile.find {user_id:user._id}, "team_id friends", done
+         TeamProfile.find {user_id:user._id}, "team_id friends friends_count", done
       other_profiles: (done) -> 
-         TeamProfile.find {user_id:other_user_id}, "team_id friends", done
+         TeamProfile.find {user_id:other_user_id}, "team_id friends friends_count", done
    , (err, results) ->
       cb(new MongoError(err)) if err
 
@@ -53,10 +56,15 @@ userSchema.methods.acceptInvite = (other_user_id, cb) ->
       for me in me_profiles
          for otherP in other_profiles
             if me.team_id.toString() == otherP.team_id.toString()
-               me.friends.addToSet(otherP._id)
-               otherP.friends.addToSet(me._id)
-               updated.push (done) -> me.save(done)
-               updated.push (done) -> otherP.save(done)
+               do (mine = me, others = otherP) ->
+                  mine.friends.addToSet(others._id)
+                  others.friends.addToSet(mine._id)
+                  updated.push (done) -> 
+                     mine.friends_count = mine.friends.length
+                     mine.save(done)
+                  updated.push (done) -> 
+                     others.friends_count = others.friends.length
+                     others.save(done)
                break
          
       async.parallel updated, cb
