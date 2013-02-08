@@ -18,8 +18,8 @@ teamSchema = new mongoose.Schema
    league_name: { type: String, require: true }
    conference_key: { type: String, require: true, index: true }
    conference_name: { type: String, require: true }
-   has_processing: { type: Boolean, require: true, index: true, default: false }
    needs_processing: { type: Boolean, require: true, index: true, default: false }
+   is_processing: { type: Boolean, require: true, default: false }
    points: 
       overall: { type: Number, require: true, default: 0 }
       knowledge: { type: Number, require: true, default: 0 }
