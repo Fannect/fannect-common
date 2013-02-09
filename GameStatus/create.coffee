@@ -42,5 +42,6 @@ create = module.exports = (info, status, next) ->
                location: game.stadium_location
                lat: game.stadium_coords?[1]
                lng: game.stadium_coords?[0]
+            status.preview = game.preview
 
          next()
