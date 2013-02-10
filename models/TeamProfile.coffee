@@ -58,6 +58,7 @@ teamProfileSchema.statics.createAndAttach = (user, team_id, cb) ->
    context = @
    newId = new mongoose.Types.ObjectId
 
+
    # Check for existance
    context
    .find({user_id: user._id, team_id: team_id })
