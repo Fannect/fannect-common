@@ -15,7 +15,7 @@ twitter_redirect = process.env.TWITTER_CALLBACK or "http://localhost:2200"
 
 twitter = module.exports = 
 
-   pullProfile: (access_token, twitter, cb) ->
+   pullProfile: (twitter, cb) ->
       return cb(new Error("Invalid twitter profile")) unless twitter.user_id
 
       oauth = 
@@ -32,7 +32,7 @@ twitter = module.exports =
          twitter_user = JSON.parse(body)
          cb(null, twitter_user.profile_image_url.replace("_normal", ""))
 
-   tweet: (access_token, twitter, tweet, cb) ->
+   tweet: (twitter, tweet, cb) ->
       return cb(new Error("Invalid twitter profile")) unless twitter.user_id
 
       oauth = 
