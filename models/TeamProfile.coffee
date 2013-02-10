@@ -5,9 +5,9 @@ Team = require "./Team"
 async = require "async"
 MongoError = require "../errors/MongoError"
 RestError = require "../errors/RestError"
+eventProcessor = require "../utils/eventProcessor"
 
 eventSchema = new mongoose.Schema
-   date: { type: Date, require: true }
    type: { type: String, require: true }
    points_earned:
       passion: { type: Number, require: true }
@@ -42,6 +42,17 @@ teamProfileSchema = new mongoose.Schema
       _id: { type: Schema.Types.ObjectId, require: true }
       text: { type: String, require: true }
    ]
+
+teamProfileSchema.methods.processEvents = (team) ->
+   return if not @waiting_events or @waiting_events.length < 1
+
+   process = () =>
+      ev = @waiting_events.pop()
+      return unless ev?.type
+      eventProcessor[ev.type](ev, team, @)
+      process()
+
+   process()
 
 teamProfileSchema.statics.createAndAttach = (user, team_id, cb) ->
    context = @
