@@ -21,6 +21,8 @@ teamProfileSchema = new mongoose.Schema
    team_id: { type: Schema.Types.ObjectId, ref: "Team", require: true, index: true }
    team_key: { type: String, require: true }
    team_name: { type: String, require: true }
+   sport_name: { type: String, requie: true }
+   sport_key: { type: String, requie: true }
    is_college: { type: Boolean, require: true }
    points:
       overall: { type: Number, require: true, default: 0 }
@@ -68,7 +70,7 @@ teamProfileSchema.statics.createAndAttach = (user, team_id, cb) ->
 
       # Get team and current friends
       async.parallel 
-         team: (done) -> Team.findById team_id, "full_name team_key is_college", done
+         team: (done) -> Team.findById team_id, "full_name team_key is_college sport_name sport_key", done
          user: (done) -> User.findById user._id, "profile_image_url first_name last_name", done
          friends: (done) ->
             # return without querying if user has no friends
@@ -87,6 +89,8 @@ teamProfileSchema.statics.createAndAttach = (user, team_id, cb) ->
                   _id: newId
                   user_id: user._id 
                   name: "#{results.user.first_name} #{results.user.last_name}"
+                  sport_key: results.team.sport_key
+                  sport_name: results.team.sport_name
                   team_id: results.team._id
                   team_key: results.team.team_key
                   team_name: results.team.full_name
