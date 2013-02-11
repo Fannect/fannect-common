@@ -77,6 +77,7 @@ auth = module.exports =
       redis.client.get access_token, (err, result) ->
          return done(new RedisError(err)) if err
          return done(new NotAuthorizedError("Invalid access_token")) if not result
+         console.log "Access token: ", access_token
          console.log "Returned user: ", result
          done(null, JSON.parse(result))
 
@@ -94,9 +95,8 @@ auth = module.exports =
             done null, access_token
 
    updateUser: (access_token, user, done) ->
-      redis.client.set access_token, JSON.stringify(user), (err, result) ->
+      redis.client.setex access_token, 1800, JSON.stringify(user), (err, result) ->
          return done(new RedisError(err)) if err
-         redis.client.expire access_token, 1800
          console.log "Updated user?:", JSON.stringify(user), result
          done null, access_token
 
