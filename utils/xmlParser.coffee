@@ -66,6 +66,7 @@ parser = module.exports =
 
       _parseAlignment: (team) -> team?["team-metadata"]?[0]?["$"]["alignment"]
       _parseTeamKey: (team) -> team?["team-metadata"]?[0]?["$"]["team-key"]
+      _parseEventKey: (sportsEvent) -> sportsEvent?[0]?["event-metadata"]?[0]["$"]?["event-key"]
       
       parseBoxScoreToJson: (doc) ->
          sportsEvent = doc?["xts:sports-content-set"]?["sports-content"]?[0]?["sports-event"]
@@ -76,6 +77,7 @@ parser = module.exports =
          results = 
             is_past: sportsEvent?[0]?["event-metadata"]?[0]?["$"]?["event-status"] == "post-event"
             attendance: sportsEvent?[0]?["event-metadata"]?[0]?["site"]?[0]?["site-stats"]?[0]?["$"]?["attendance"]
+            event_key: sportsEvent?[0]?["event-metadata"]?[0]["$"]?["event-key"]
 
          for team in teams         
             alignment = parser.boxScores._parseAlignment(team)
