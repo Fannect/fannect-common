@@ -9,3 +9,5 @@ crypt = module.exports =
    generateAccessToken: () -> return crypto.randomBytes(16).toString("hex")
    generateRefreshToken: () -> return crypto.randomBytes(32).toString("hex")
    generateResetToken: () -> return crypto.randomBytes(4).toString("hex")
+   generateClientId: () -> return crypto.randomBytes(16).toString("hex")
+   generateClientSecret: () -> return crypto.randomBytes(32).toString("hex")
