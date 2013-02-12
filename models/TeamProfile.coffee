@@ -35,7 +35,6 @@ teamProfileSchema = new mongoose.Schema
    events: [ eventSchema ]
    team_image_url: { type: String, require: true }
    profile_image_url: { type: String, require: true }
-   has_processing: { type: Boolean, require: true, index: true, default: false }
    waiting_events: [
       type: { type: String, require: true, }
       meta: Schema.Types.Mixed

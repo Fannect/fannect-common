@@ -68,16 +68,18 @@ parser = module.exports =
       _parseTeamKey: (team) -> team?["team-metadata"]?[0]?["$"]["team-key"]
       _parseEventKey: (sportsEvent) -> sportsEvent?[0]?["event-metadata"]?[0]["$"]?["event-key"]
       
-      parseBoxScoreToJson: (doc) ->
-         sportsEvent = doc?["xts:sports-content-set"]?["sports-content"]?[0]?["sports-event"]
-         teamStats = sportsEvent?[0]?["team"]?[0]?["team-stats"]?[0]?["$"]
+      parseEvents: (doc) ->
+         doc?["xts:sports-content-set"]?["sports-content"]?[0]["sports-event"]
+
+      parseBoxScoreToJson: (sportsEvent) ->
+         teamStats = sportsEvent?["team"]?[0]?["team-stats"]?[0]?["$"]
          
-         return {} unless teams = sportsEvent?[0]?["team"]
-  
+         return {} unless teams = sportsEvent?["team"]
+         
          results = 
-            is_past: sportsEvent?[0]?["event-metadata"]?[0]?["$"]?["event-status"] == "post-event"
-            attendance: sportsEvent?[0]?["event-metadata"]?[0]?["site"]?[0]?["site-stats"]?[0]?["$"]?["attendance"]
-            event_key: sportsEvent?[0]?["event-metadata"]?[0]["$"]?["event-key"]
+            is_past: sportsEvent?["event-metadata"]?[0]?["$"]?["event-status"] == "post-event"
+            attendance: sportsEvent?["event-metadata"]?[0]?["site"]?[0]?["site-stats"]?[0]?["$"]?["attendance"]
+            event_key: sportsEvent?["event-metadata"]?[0]["$"]?["event-key"]
 
          for team in teams         
             alignment = parser.boxScores._parseAlignment(team)
