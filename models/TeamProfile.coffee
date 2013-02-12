@@ -44,6 +44,11 @@ teamProfileSchema = new mongoose.Schema
       _id: { type: Schema.Types.ObjectId, require: true }
       text: { type: String, require: true }
    ]
+   groups: [
+      group_id: { type: Schema.Types.ObjectId, index: true, ref: "Group" }
+      name: { type: String, require: true }
+      tags: [{ type: String }]
+   ]
 
 teamProfileSchema.methods.processEvents = (team) ->
    return if not @waiting_events or @waiting_events.length < 1
@@ -59,7 +64,6 @@ teamProfileSchema.methods.processEvents = (team) ->
 teamProfileSchema.statics.createAndAttach = (user, team_id, cb) ->
    context = @
    newId = new mongoose.Types.ObjectId
-
 
    # Check for existance
    context
