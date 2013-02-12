@@ -1,8 +1,10 @@
 redis = require("../utils/redis")
+mongoose = require("mongoose")
 InvalidArgumentError = require("../errors/InvalidArgumentError")
 NotAuthorizedError = require("../errors/NotAuthorizedError")
 RedisError = require("../errors/RedisError")
 crypt = require "../utils/crypt"
+App = require "../models/App"
 
 auth = module.exports =
    rookieStatus: (req, res, next) ->
@@ -67,6 +69,28 @@ auth = module.exports =
          else
             next(new NotAuthorizedError("Do not have required authorization level. Must be 'hof'."))
 
+   app: 
+      managerStatus: (req, res, next) ->
+         return unless token = hasToken(req, res, next)
+         auth.getUser token, (err, user) ->
+            return next(err) if err
+
+            if user.role in [ "manager", "owner" ]
+               req.user = user
+               next()
+            else
+               next(new NotAuthorizedError("Do not have required authorization level. Must be 'manager' or higher."))
+
+      ownerStatus: (req, res, next) ->
+         return unless token = hasToken(req, res, next)
+         auth.getUser token, (err, app) ->
+            return next(err) if err
+
+            if app.role == "owner"
+               req.app = app
+               next()
+            else
+               next(new NotAuthorizedError("Do not have required authorization level. Must be 'owner'."))
 
    createAccessToken: (user, done) ->
       # Create new access_token and store
