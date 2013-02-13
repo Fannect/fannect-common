@@ -15,6 +15,7 @@ groupSchema = new mongoose.Schema
       knowledge: { type: Number, require: true, default: 0 }
       passion: { type: Number, require: true, default: 0 }
       dedication: { type: Number, require: true, default: 0 }
+   members: { type: Number }
    tags: [{ type: String }]
 
 groupSchema.statics.createAndAttach = (group, cb) ->
