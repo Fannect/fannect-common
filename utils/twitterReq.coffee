@@ -1,6 +1,5 @@
 express = require "express"
 auth = require "../middleware/authenticate"
-OAuth = require("oauth").OAuth
 MongoError = require "../errors/MongoError"
 RestError = require "../errors/RestError"
 RedisError = require "../errors/RedisError"
