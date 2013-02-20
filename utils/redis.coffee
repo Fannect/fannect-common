@@ -10,6 +10,8 @@ module.exports = (redis_url) ->
       client.auth password, (err) -> throw err if err
 
    client.on "ready", () -> console.log "redis ready!"
+   client.on "end", () -> console.log "redis connection ended!"
+
    if database = parsed_auth[0] and parsed_auth[0] != "none"
       client.select database
       client.on "connect", () ->
