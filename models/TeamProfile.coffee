@@ -9,6 +9,7 @@ eventProcessor = require "../utils/eventProcessor"
 
 eventSchema = new mongoose.Schema
    type: { type: String, require: true }
+   event_key: { type: String }
    points_earned:
       passion: { type: Number, require: true }
       dedication: { type: Number, require: true }
@@ -37,6 +38,7 @@ teamProfileSchema = new mongoose.Schema
    profile_image_url: { type: String, require: true }
    waiting_events: [
       type: { type: String, require: true, }
+      event_key: { type: String }
       meta: Schema.Types.Mixed
    ]
    shouts: [
@@ -59,6 +61,19 @@ teamProfileSchema.methods.processEvents = (team) ->
       process()
 
    process()
+
+   # Reset points
+   @points.passion = 0
+   @points.dedication = 0
+   @points.knowledge = 0
+   @points.overall = 0
+
+   for ev in @events
+      @points.passion += ev.points_earned.passion if ev.points_earned.passion
+      @points.dedication += ev.points_earned.dedication if ev.points_earned.dedication
+      @points.knowledge += ev.points_earned.knowledge if ev.points_earned.knowledge
+
+   @points.overall = @points.passion + @points.dedication + @points.knowledge
 
 teamProfileSchema.statics.createAndAttach = (user, team_id, cb) ->
    context = @

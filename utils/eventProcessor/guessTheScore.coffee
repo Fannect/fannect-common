@@ -8,7 +8,7 @@ gts = module.exports =
    calcScore: (sport_key, distance) ->
       return sports_breakdown[sport_key](distance)
 
-score_brackets = [ 18, 16, 13, 9, 4, 1 ]
+score_brackets = [ 8, 5, 4, 3, 2, 1 ]
 sports_breakdown =
    # Basketball
    "15008000": (distance) ->
@@ -31,9 +31,7 @@ sports_breakdown =
    # Soccer
    "15054000": (distance) ->
       if distance == 0 then return score_brackets[0]
-      else if distance <= 1 then return score_brackets[1]
       else if distance <= 2 then return score_brackets[2]
-      else if distance <= 3 then return score_brackets[3]
       else if distance <= 4 then return score_brackets[4]
       else return score_brackets[5]
    
@@ -49,8 +47,6 @@ sports_breakdown =
    # Ice hockey
    "15031000": (distance) ->
       if distance == 0 then return score_brackets[0]
-      else if distance <= 1 then return score_brackets[1]
       else if distance <= 2 then return score_brackets[2]
-      else if distance <= 3 then return score_brackets[3]
       else if distance <= 4 then return score_brackets[4]
       else return score_brackets[5]
