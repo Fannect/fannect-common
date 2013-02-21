@@ -60,6 +60,9 @@ teamSchema = new mongoose.Schema
          game_time: { type: Date }
          opponent: { type: String }
          opponent_id: { type: Schema.Types.ObjectId, ref: "Team" }
+         stadium_id: { type: String }
+         stadium_name: { type: String } 
+         stadium_location: { type: String }
          is_home: { type: Boolean }
          score: { type: Number }
          opponent_score: { type: Number }

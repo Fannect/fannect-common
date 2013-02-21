@@ -8,6 +8,11 @@ proc = module.exports =
       streak = _.where(profile.events, { type: "attendance_streak" }).length
       score = attendanceStreak.calcScore(streak, not team.schedule.postgame.is_home)
 
+      ev.meta.is_home = team.schedule.postgame.score
+      ev.meta.opponent = team.schedule.postgame.opponent
+      ev.meta.stadium_name = team.schedule.postgame.stadium_name
+      ev.meta.stadium_location = team.schedule.postgame.stadium_location
+
       profile.events.addToSet
          type: ev.type
          points_earned: { dedication: score }
@@ -15,6 +20,7 @@ proc = module.exports =
          event_key: ev.event_key or team.schedule.postgame.event_key
       
    game_face: (ev, team, profile) ->
+      ev.meta.opponent = team.schedule.postgame.opponent
       profile.events.addToSet
          type: ev.type
          points_earned: { passion: 1 }
@@ -22,7 +28,8 @@ proc = module.exports =
          event_key: ev.event_key or team.schedule.postgame.event_key
          
    guess_the_score: (ev, team, profile) ->
-      if team.schedule.postgame.is_home
+      ev.meta.opponent = team.schedule.postgame.opponent
+      if ev.meta.is_home = team.schedule.postgame.is_home
          ev.meta.actual_home_score = team.schedule.postgame.score
          ev.meta.actual_away_score = team.schedule.postgame.opponent_score
       else
