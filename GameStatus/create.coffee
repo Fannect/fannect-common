@@ -31,6 +31,7 @@ create = module.exports = (info, status, next) ->
                lat: team.stadium?.coords?[1]
                lng: team.stadium?.coords?[0]
          else
+            status.event_key = game.event_key
             status.game_time = game.game_time
             status.is_home = game.is_home
             status.home_team = 

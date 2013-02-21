@@ -21,7 +21,7 @@ meta = module.exports =
                return next(new RestError("duplicate", "#{info.gameType} already set"))
                
          info.profile.waiting_events.push
-            event_key: new Date()
+            event_key: status.event_key
             type: info.gameType
             meta: info.meta
 
