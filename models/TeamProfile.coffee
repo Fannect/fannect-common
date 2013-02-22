@@ -89,49 +89,49 @@ teamProfileSchema.statics.createAndAttach = (user, team_id, cb) ->
       # Get team and current friends
       async.parallel 
          team: (done) -> Team.findById team_id, "full_name team_key is_college sport_name sport_key", done
-         user: (done) -> User.findById user._id, "profile_image_url first_name last_name", done
-         friends: (done) ->
-            # return without querying if user has no friends
-            return done null, [] unless user.friends?.length > 0
-            context
-            .find({ team_id: team_id, user_id: { $in: user.friends }})
-            .select("friends friends_count")
-            .exec(done)
+         user: (done) -> User.findById user._id, "profile_image_url first_name last_name friends", done
+         
       , (err, results) ->
          return cb(new MongoError(err)) if err
+      
+         context
+         .find({ user_id: { $in: results.user.friends }, team_id: team_id})
+         .select("friends friends_count")
+         .exec (err, friends) ->
+            return cb(new MongoError(err)) if err
 
-         new_friends = []
-         updated = 
-            create: (done) ->
-               context.create {
-                  _id: newId
-                  user_id: user._id 
-                  name: "#{results.user.first_name} #{results.user.last_name}"
-                  sport_key: results.team.sport_key
-                  sport_name: results.team.sport_name
-                  team_id: results.team._id
-                  team_key: results.team.team_key
-                  team_name: results.team.full_name
-                  is_college: results.team.is_college
-                  friends: new_friends
-                  friends_count: new_friends.length
-                  team_image_url: ""
-                  profile_image_url: results.user.profile_image_url
-               }, done
-            update_owner: (done) ->
-               User.update {_id: user._id}, {$addToSet: {team_profiles: newId}}, done
+            new_friends = []
+            updated = 
+               create: (done) ->
+                  context.create {
+                     _id: newId
+                     user_id: user._id 
+                     name: "#{results.user.first_name} #{results.user.last_name}"
+                     sport_key: results.team.sport_key
+                     sport_name: results.team.sport_name
+                     team_id: results.team._id
+                     team_key: results.team.team_key
+                     team_name: results.team.full_name
+                     is_college: results.team.is_college
+                     friends: new_friends
+                     friends_count: new_friends.length
+                     team_image_url: ""
+                     profile_image_url: results.user.profile_image_url
+                  }, done
+               update_owner: (done) ->
+                  User.update {_id: user._id}, {$addToSet: {team_profiles: newId}}, done
 
-         # Swap team profile ids
-         for p in results.friends
-            do (profile = p) ->
-               profile.friends.addToSet(newId)
-               profile.friends_count++
-               new_friends.push(profile._id)
-               updated[profile._id] = (done) -> profile.save(done)
+            # Swap team profile ids
+            for p in friends
+               do (profile = p) ->
+                  profile.friends.addToSet(newId)
+                  profile.friends_count++
+                  new_friends.push(profile._id)
+                  updated[profile._id] = (done) -> profile.save(done)
 
-         # Save all changes
-         async.parallel updated, (err, result) ->
-            return cb(new MongoError(err)) if err 
-            cb null, result.create
+            # Save all changes
+            async.parallel updated, (err, result) ->
+               return cb(new MongoError(err)) if err 
+               cb null, result.create
 
 module.exports = mongoose.model("TeamProfile", teamProfileSchema)
