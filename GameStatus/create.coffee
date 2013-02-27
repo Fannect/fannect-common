@@ -7,7 +7,7 @@ create = module.exports = (info, status, next) ->
 
    TeamProfile
    .findById(info.profileId)
-   .select("team_id waiting_events")
+   .select("user_id team_id waiting_events")
    .exec (err, profile) ->
       return next(new MongoError(err)) if err
       return next(new InvalidArgumentError("Invalid: team_profile_id")) unless profile
