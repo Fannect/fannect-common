@@ -29,6 +29,9 @@ groupSchema.statics.createAndAttach = (group, cb) ->
    else
       return cb(new InvalidArgumentError("Required: team_id or team_key"))
 
+   if typeof group.tags == "string"
+      group.tags = group.tags.split(",")
+      group.tags[i] = tag.trim() for tag, i in group.tags
 
    Team
    .findOne(query)
