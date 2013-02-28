@@ -1,5 +1,6 @@
 guessTheScore = require "./eventProcessor/guessTheScore"
 attendanceStreak = require "./eventProcessor/attendanceStreak"
+gameFace = require "./eventProcessor/gameFace"
 _ = require "underscore"
 mongoose = require "mongoose"
 
@@ -25,10 +26,13 @@ proc = module.exports =
    game_face: (ev, team, profile) ->
       ev.meta.team_name = team.full_name
       ev.meta.opponent = team.schedule.postgame.opponent
+      
+      earned = gameFace.calcScore(ev.meta?.motivated_count)
+      
       profile.events.addToSet
          _id: generateNewId(ev._id)
          type: ev.type
-         points_earned: { passion: 1 }
+         points_earned: { passion: earned }
          meta: ev.meta
          event_key: ev.event_key or team.schedule.postgame.event_key
          
