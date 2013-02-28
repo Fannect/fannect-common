@@ -6,17 +6,27 @@ class EventMetaML
       return @ unless metaDoc
       @event_key = misc.reachIn(metaDoc, "$.event-key")
       @event_status = misc.reachIn(metaDoc, "$.event-status")
-      @duration = misc.reachIn(metaDoc, "$.duration").trim()
+      @duration = misc.reachIn(metaDoc, "$.duration")?.trim()
       @start_time = parseDate(misc.reachIn(metaDoc, "$.start-date-time"))
-      @coverage = misc.reachIn(metaDoc, "sports-property.0.$.value")
       @attendance = misc.reachIn(metaDoc, "site.0.site-stats.0.$.attendance")
       @stadium_key = misc.reachIn(metaDoc, "site.0.site-metadata.0.$.site-key")
+
+      @docs = {}
+      properties = misc.reachIn(metaDoc, "sports-property")
+      
+      if properties
+         for prop in properties
+            id = misc.reachIn(prop, "$.formal-name").replace(/-/g, "_")
+            value = misc.reachIn(prop, "$.value")
+            
+            if id == "television_coverage" then @coverage = value
+            else @docs[id] = value
 
    isValid: () => return @event_key?
    isPast: () =>
       return true if @event_status == "post-event"
 
-parseDate: (dateString) ->
+parseDate = (dateString) ->
    return dateString unless dateString
    y = dateString.substring(0,4)
    m = dateString.substring(4,6) - 1
