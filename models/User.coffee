@@ -22,6 +22,7 @@ userSchema = new mongoose.Schema
       game_notice: { type: Boolean }
       points_notice: { type: Boolean }
    reload_stream: String
+   verified: String
 
 userSchema.methods.acceptInvite = (other_user_id, cb) ->
    # Require later to not have circular dependancy, may not even matter

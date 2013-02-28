@@ -50,6 +50,7 @@ teamProfileSchema = new mongoose.Schema
       name: { type: String, require: true }
       tags: [{ type: String }]
    ]
+   verified: String
 
 teamProfileSchema.methods.processEvents = (team) ->
    return if not @waiting_events or @waiting_events.length < 1
@@ -89,7 +90,7 @@ teamProfileSchema.statics.createAndAttach = (user, team_id, cb) ->
       # Get team and current friends
       async.parallel 
          team: (done) -> Team.findById team_id, "full_name team_key is_college sport_name sport_key", done
-         user: (done) -> User.findById user._id, "profile_image_url first_name last_name friends", done
+         user: (done) -> User.findById user._id, "profile_image_url first_name last_name friends verified", done
          
       , (err, results) ->
          return cb(new MongoError(err)) if err
@@ -117,6 +118,7 @@ teamProfileSchema.statics.createAndAttach = (user, team_id, cb) ->
                      friends_count: new_friends.length
                      team_image_url: ""
                      profile_image_url: results.user.profile_image_url
+                     verified: results.user.verified
                   }, done
                update_owner: (done) ->
                   User.update {_id: user._id}, {$addToSet: {team_profiles: newId}}, done
