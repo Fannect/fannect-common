@@ -29,7 +29,12 @@ twitter = module.exports =
       , (err, resp, body) ->
          return cb(err) if err
          twitter_user = JSON.parse(body)
-         console.log "TWITTER_USER", twitter_user
+         
+         if twitter_user.errors
+            for error in twitter_user.errors
+               if error.code == 89
+                  return cb(error)
+            
          cb(null, twitter_user?.profile_image_url?.replace("_normal", ""))
 
    tweet: (twitter, tweet, cb) ->
