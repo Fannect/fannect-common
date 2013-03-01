@@ -16,5 +16,7 @@ class SportsEventML
             else @away_team = team
 
    isValid: () => return @eventMeta.isValid()
+   isHome: (team_key) => return @home_team.team_key == team_key
+   isAway: (team_key) => return @away_team.team_key == team_key
    
 module.exports = SportsEventML

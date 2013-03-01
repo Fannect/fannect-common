@@ -7,7 +7,7 @@ class EventMetaML
       @event_key = misc.reachIn(metaDoc, "$.event-key")
       @event_status = misc.reachIn(metaDoc, "$.event-status")
       @duration = misc.reachIn(metaDoc, "$.duration")?.trim()
-      @start_time = parseDate(misc.reachIn(metaDoc, "$.start-date-time"))
+      @start_date_time = parseDate(misc.reachIn(metaDoc, "$.start-date-time"))
       @attendance = misc.reachIn(metaDoc, "site.0.site-stats.0.$.attendance")
       @stadium_key = misc.reachIn(metaDoc, "site.0.site-metadata.0.$.site-key")
 
@@ -23,8 +23,7 @@ class EventMetaML
             else @docs[id] = value
 
    isValid: () => return @event_key?
-   isPast: () =>
-      return true if @event_status == "post-event"
+   isPast: () => return @event_status == "post-event"
 
 parseDate = (dateString) ->
    return dateString unless dateString
