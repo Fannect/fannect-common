@@ -35,9 +35,11 @@ meta = module.exports =
          return next(new RestError("invalid_time")) unless status.available
          
          ev = null
-         for ev in info.profile.waiting_events
-            break if ev.type == info.gameType and ev.event_key == status.event_key 
-         
+         for event in info.profile.waiting_events
+            if event.type == info.gameType and event.event_key == status.event_key 
+               ev = event
+               break
+
          if ev
             _.extend(ev.meta, info.meta)
             ev.markModified("meta")
