@@ -29,7 +29,8 @@ twitter = module.exports =
       , (err, resp, body) ->
          return cb(err) if err
          twitter_user = JSON.parse(body)
-         cb(null, twitter_user.profile_image_url.replace("_normal", ""))
+         console.log "TWITTER_USER", twitter_user
+         cb(null, twitter_user?.profile_image_url?.replace("_normal", ""))
 
    tweet: (twitter, tweet, cb) ->
       return cb(new Error("Invalid twitter profile")) unless twitter.user_id
