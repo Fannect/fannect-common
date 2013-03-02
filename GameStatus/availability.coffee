@@ -4,7 +4,7 @@ availability = module.exports =
       if _hasSchedule(info)
          now = new Date() / 1
          gameTime = info.team.schedule.pregame.game_time / 1
-         status.available = (not _in_progress(now, gameTime) and _within_hours(now, gameTime, 12))
+         status.available = (not _in_progress(now, gameTime) and _within_hours(now, gameTime, 16))
          status.in_progress = _in_progress(now, gameTime)
       else
          status.available = false
