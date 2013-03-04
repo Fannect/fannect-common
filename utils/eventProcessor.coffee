@@ -27,6 +27,9 @@ proc = module.exports =
       ev.meta.team_name = team.full_name
       ev.meta.opponent = team.schedule.postgame.opponent
       
+      # return early if game face was never turned on
+      return unless ev.meta.face_on
+
       earned = gameFace.calcScore(ev.meta?.motivated_count)
       
       profile.events.addToSet

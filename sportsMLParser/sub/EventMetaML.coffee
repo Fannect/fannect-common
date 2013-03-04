@@ -24,6 +24,8 @@ class EventMetaML
 
    isValid: () => return @event_key?
    isPast: () => return @event_status == "post-event"
+   isBefore: () => return @event_status == "pre-event"
+   isPostponed: () => return @event_status == "postponed"
 
 parseDate = (dateString) ->
    return dateString unless dateString
