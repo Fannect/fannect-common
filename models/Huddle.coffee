@@ -28,7 +28,7 @@ huddleSchema = new mongoose.Schema
    rating: { type: Number, require: true, default: 0 }
    rating_count: { type: Number, require: true, default: 0 }
    rated_by: [{ type: Schema.Types.ObjectId, ref: "TeamProfile", index: {unique: true} }]
-   last_comment_time: { type: Date, default: Date.now }
+   last_reply_time: { type: Date, default: Date.now }
 
 module.exports = mongoose.model("Huddle", huddleSchema)
 
