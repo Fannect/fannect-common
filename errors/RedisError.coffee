@@ -1,7 +1,7 @@
 RestError = require "./RestError"
 
 class RedisError extends RestError
-   constructor: (reason, message) ->
-      super(400, reason, message)
+   constructor: (error) ->
+      super(400, error.reason, error.message)
 
 module.exports = RedisError
