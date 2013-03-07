@@ -46,7 +46,7 @@ twitter = module.exports =
          token: twitter.access_token
          token_secret: twitter.access_token_secret
 
-      hashtag = " #shout"
+      hashtag = " via @fannect"
 
       if tweet.length + hashtag.length <= 140
          tweet += hashtag
