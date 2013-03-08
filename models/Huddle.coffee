@@ -16,6 +16,9 @@ huddleSchema = new mongoose.Schema
       content: { type: String, require: true }
       team_id: { type: Schema.Types.ObjectId, ref: "Team", require: true }
       team_name: { type: String, require: true }
+      voted_by: [{ type: Schema.Types.ObjectId, ref: "User" }]
+      up_votes: { type: Number, default: 0, require: true }
+      down_votes: { type: Number, default: 0, require: true }
    ]
    tags: [
       include_id: { type: Schema.Types.ObjectId }
