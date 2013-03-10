@@ -8,12 +8,10 @@ App = require "../models/App"
 
 auth = module.exports =
    rookieStatus: (req, res, next) ->
-      console.log "Before authorization"
       return unless token = hasToken(req, res, next)
       auth.getUser token, (err, user) ->
          return next(err) if err
          req.user = user
-         console.log "After authorization"
          next()
 
    subStatus: (req, res, next) ->
