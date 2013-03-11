@@ -12,6 +12,7 @@ huddleSchema = new mongoose.Schema
       owner_id: { type: Schema.Types.ObjectId, ref: "TeamProfile", require: true, index: true }
       owner_user_id: { type: Schema.Types.ObjectId, ref: "User", require: true, index: true }
       owner_name: { type: String, require: true }
+      owner_profile_image_url: { type: String }
       owner_verified: { type: String }
       content: { type: String, require: true }
       team_id: { type: Schema.Types.ObjectId, ref: "Team", require: true }
