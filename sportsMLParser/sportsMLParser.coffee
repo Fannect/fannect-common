@@ -10,12 +10,17 @@ module.exports =
    eventStats: (xml, done) -> parse(EventStatsML, xml, done)
 
 parse = (type, xml, done) ->
+   xml = xml.toString()
+   return done() if isEmptyXml(xml)
    xmlParser.parseString xml, (err, doc) ->
       return done(err) if err
-      return done() if isEmpty(doc)
+      return done() if isEmptyDoc(doc)
       done(null, new type(doc))
 
-isEmpty = (doc) ->
+isEmptyXml = (xml) ->
+   return xml?.indexOf("<xts:sports-content-set />") > -1
+   
+isEmptyDoc = (doc) ->
    return false if not doc?["xts:sports-content-set"]
 
    count = 0
