@@ -27,6 +27,7 @@ class Job
 module.exports = Job
 module.exports.types = 
    rename: require "./RenameJob"
+   profile_image: require "./ProfileImageJob"
 
 module.exports.create = (json) ->
    if typeof json == "string"

@@ -1,0 +1,75 @@
+{
+    "huddles": [
+        {
+            "_id": "513526fec16e8ec75f00000a",
+            "team_id": "5102b17168a0c8f70c000008",
+            "team_name": "Kansas St. Wildcats",
+            "owner_id": "5102b17168a0c8f70c000005",
+            "owner_user_id": "5102b17168a0c8f70c000002",
+            "owner_name":"Mike Testing",
+            "topic": "Here&#39;s a test topic",
+            "last_comment_time": "2013-03-04T22:58:06.601Z",
+            "rating_count": 0,
+            "rating": 0,
+            "tags": 
+            [ 
+                { 
+                    "include_id": "5102b17168a0c8f70c000008",
+                    "type": "team",
+                    "_id": "513526fec16e8ec75f00000c" 
+                }
+            ],
+            "replies": [ 
+                { 
+                   "_id": "513526fec16e8ec75f00000b",
+                    "owner_id": "5102b17168a0c8f70c000005",
+                   "owner_user_id": "5102b17168a0c8f70c000002",
+                   "owner_name": "Mike Testing",
+                   "owner_profile_image_url": "oldimage",
+                   "content": "Here is some fake content"
+                } 
+            ],
+            "reply_count": 1 
+        }, {
+            "_id": "513526fec16e8ec75f00009b",
+            "team_id": "5102b17168a0c8f70c000009",
+            "team_name": "Kansas St. Wildcats",
+            "owner_id": "5102b17168a0c8f70c000006",
+            "owner_user_id": "5102b17168a0c8f70c000003",
+            "owner_name":"Allstar Testing",
+            "topic": "Here&#39;s a test topic",
+            "last_comment_time": "2013-03-04T22:58:06.601Z",
+            "rating_count": 0,
+            "rating": 0,
+            "tags": 
+            [ 
+                { 
+                    "include_id": "51038413f71f44551a7b172a",
+                    "type": "team",
+                    "_id": "513526fec16e8ec75f00000c" 
+                }, {
+                    "_id": "513526fec16e8ec75f00000d",
+                    "include_key": "l.ncaa.org.mfoot",
+                    "type": "league",
+                    "name": "NCAA Men's Football Division 1A"
+                }, { 
+                    "_id": "513526fec16e8ec75f00000e",
+                    "include_key": "c.big-12",
+                    "type": "conference",
+                    "name": "Big 12 Conference"
+                } 
+            ],
+            "replies": [ 
+                { 
+                   "_id": "513526fec16e8ec75f00000b",
+                    "owner_id": "5102b17168a0c8f70c000005",
+                   "owner_user_id": "5102b17168a0c8f70c000002",
+                   "owner_name": "Mike Testing",
+                   "owner_profile_image_url": "oldimage",
+                   "content": "Here is some fake content"
+                } 
+            ],
+            "reply_count": 1 
+        }
+    ]
+}
