@@ -15,6 +15,7 @@ csvParser.parseTeams = (data, done) ->
    count = 0
    running = 0
    errors = []
+   hasContent = false
 
    csv()   
    .from(data)
@@ -27,6 +28,7 @@ csvParser.parseTeams = (data, done) ->
 
          if line.activate == "a"
             running++
+            hasContent = true
 
             newTeam =
                team_key: line.team_key
@@ -52,7 +54,7 @@ csvParser.parseTeams = (data, done) ->
                   done(error, count)
    )
    .on("end", () ->
-      if running == 0
+      if running == 0 and not hasContent
          error = if errors.length > 0 then errors else null
          done(error, count)
    )
