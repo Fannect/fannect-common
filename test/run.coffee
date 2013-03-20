@@ -15,6 +15,5 @@ mongooseTypes.loadTypes mongoose
 
 describe "Fannect Common", () ->
 
-   # before () ->
-
    require "./jobs/jobs"
+   require "./sportsMLParser/sportsMLParser"
