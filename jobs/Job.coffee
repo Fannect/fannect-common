@@ -2,7 +2,7 @@ redis = (require "../utils/redis").queue
 
 class Job
    constructor: (data) ->
-      @type = data.job_type
+      @type = data.type
       @is_locking = data.is_locking or false
       @locking_id = data.locking_id
       @meta = data.meta or {}
@@ -21,7 +21,7 @@ class Job
       jobDef = JSON.stringify(@)
       queue.multi()
       .lpush("job_queue", jobDef)
-      .publish("job_queue", jobDef)
+      .publish("new_job", jobDef)
       .exec(cb)
 
 module.exports = Job
