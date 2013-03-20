@@ -1,9 +1,19 @@
 require "mocha"
 should = require "should"
-sportsML = require "../../sportsMLParser/sportsMLParser"
 fs = require "fs"
 
+# Check and see if xml2js is installed, skip if not
+try
+   require "xml2js"
+catch e
+   skip = true
+
+sportsML = require "../../sportsMLParser/sportsMLParser" unless skip
+
 describe "sportsMLParser", () ->
+
+   # Return if should skip
+   return  it "skipping because 'xml2js' is not installed" if skip
 
    it "should identify empty document", (done) ->
       fs.readFile "#{__dirname}/res/fakeNoResult.xml", (err, xml) ->
