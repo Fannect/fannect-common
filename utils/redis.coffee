@@ -1,10 +1,10 @@
 url = require("url")
 
-module.exports = (redis_url, connection_name) ->
+module.exports = (redis_url, connection_name = "client") ->
    parsed_url = url.parse(redis_url or "redis://localhost:6379")
    parsed_auth = (parsed_url.auth or "").split(":")
 
-   module.exports[connection_name or "client"] = 
+   module.exports[connection_name] = 
       client = require("redis").createClient(parsed_url.port, parsed_url.hostname)
 
    if password = parsed_auth[1]
