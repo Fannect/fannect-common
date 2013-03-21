@@ -11,7 +11,7 @@ class Job
    run: () -> throw new Error("Run must be overriden!")
    queue: (redis_client, cb) =>
       # shift arguments if only cb is supplied
-      if typeof redis_client == "function" and arguments.length == 2
+      if typeof redis_client == "function" and arguments.length == 1
          cb = redis_client
          redis_client = null
             
