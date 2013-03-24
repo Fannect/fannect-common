@@ -14,6 +14,7 @@ userSchema = new mongoose.Schema
    refresh_token: { type: String, required: true, index: { unique: true }}
    facebook: Schema.Types.Mixed
    twitter: Schema.Types.Mixed
+   instagram: Schema.Types.Mixed
    friends: [{ type: Schema.Types.ObjectId, ref: "User", index: true }]
    team_profiles: [{ type: Schema.Types.ObjectId, ref: "TeamProfile" }]
    role: { type: String, default: "rookie" }
