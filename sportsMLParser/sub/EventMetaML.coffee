@@ -10,6 +10,7 @@ class EventMetaML
       @start_date_time = parseDate(misc.reachIn(metaDoc, "$.start-date-time"))
       @attendance = misc.reachIn(metaDoc, "site.0.site-stats.0.$.attendance")
       @stadium_key = misc.reachIn(metaDoc, "site.0.site-metadata.0.$.site-key")
+      @coverage = misc.reachIn(metaDoc, "$.xts:broadcast-listing")
 
       @docs = {}
       properties = misc.reachIn(metaDoc, "sports-property")

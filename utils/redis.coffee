@@ -1,4 +1,5 @@
 url = require("url")
+connections = []
 
 module.exports = (redis_url, connection_name = "client") ->
    parsed_url = url.parse(redis_url or "redis://localhost:6379")
@@ -6,6 +7,8 @@ module.exports = (redis_url, connection_name = "client") ->
 
    module.exports[connection_name] = 
       client = require("redis").createClient(parsed_url.port, parsed_url.hostname)
+
+   connections.push(connection_name) unless (connection_name in connections)
 
    if password = parsed_auth[1]
       client.auth password, (err) -> throw err if err
@@ -24,3 +27,8 @@ module.exports = (redis_url, connection_name = "client") ->
    return module.exports[connection_name or client] = client
 
 # client = module.exports.client = null
+module.exports.closeAll = () ->
+   for name in connections
+      if (client = module.exports[name])
+         console.log "redis (#{name}) quitting!"
+         client.quit() 
