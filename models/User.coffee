@@ -71,4 +71,25 @@ userSchema.methods.acceptInvite = (other_user_id, cb) ->
          
       async.parallel updated, cb
 
+userSchema.statics.sendInvite = (from, to_id, cb) ->
+   # Require later to not have circular dependancy, may not even matter
+   
+   User.update { _id: to_id },
+      $addToSet: { invites: from._id }
+   , (err, result) ->
+      return cb(new MongoError(err)) if err
+      return cb(new RestError(400, "duplicate", "Duplicate: invite already sent")) unless result == 1
+      cb()
+
+      # send push
+      unless process.env.NODE_TESTING and from?.first_name and from?.last_name
+         parse.sendPushNotification 
+            channels: ["user_#{to_id}"]
+            data: 
+               alert: "#{from.first_name} #{from.last_name} just sent you a Roster Request."
+               event: "invite"
+               title: "Roster Request"
+         , (err) ->
+            console.error "Failed to send invite push: ", err if err
+
 User = module.exports = mongoose.model("User", userSchema)
