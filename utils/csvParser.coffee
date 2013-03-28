@@ -31,10 +31,10 @@ csvParser.parseTeams = (data, done) ->
             hasContent = true
 
             newTeam =
-               team_key: line.team_key
-               mascot: line.mascot
-               location_name: line.location_name
-               full_name: line.full_name
+               team_key: line.team_key?.trim()
+               mascot: line.mascot?.trim()
+               location_name: line.location_name?.trim()
+               full_name: line.full_name?.trim()
                # stadium:
                #    name: line.stadium_name
                #    coords: [ line.stadium_long, line.stadium_lat ]
@@ -79,10 +79,10 @@ csvParser.parseStadiums = (data, done) ->
             running++
 
             newStadium =
-               team_key: line.team_key
-               stadium_key: line.stadium_key
-               name: line.name or line.stadium_name
-               location: line.location or line.stadium_location
+               team_key: line.team_key.trim()
+               stadium_key: line.stadium_key.trim()
+               name: line.name?.trim() or line.stadium_name?.trim()
+               location: line.location?.trim() or line.stadium_location?.trim()
                lat: line.lat or line.stadium_lat
                lng: line.lng or line.stadium_long or line.stadium_lng
 
