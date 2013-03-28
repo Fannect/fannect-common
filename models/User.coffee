@@ -4,6 +4,11 @@ Url = mongoose.SchemaTypes.Url
 Schema = mongoose.Schema
 async = require "async"
 MongoError = require "../errors/MongoError"
+ 
+parse = new (require "kaiseki")(
+   process.env.PARSE_APP_ID or "EP2BOLtJpCtZP1gMWc65YxIMUvum8qqjKswCESJi",
+   process.env.PARSE_API_KEY or "G8ZsbWBu0Is83VVsyvWcJeAqXhL0FI7cQeJvSHxU"
+)
 
 userSchema = new mongoose.Schema
    email: { type: Email, index: { unique: true }, lowercase: true, trim: true }
@@ -69,6 +74,51 @@ userSchema.methods.acceptInvite = (other_user_id, cb) ->
                      others.save(done)
                break
          
+      async.parallel updated, cb
+
+
+userSchema.methods.removeFriend = (other_user_id, cb) ->
+   # Require later to not have circular dependancy, may not even matter
+   TeamProfile = require "./TeamProfile"
+   user = @
+
+   cb(next(new InvalidArgumentError("Required: other_user_id"))) unless other_user_id
+
+   async.parallel
+      other: (done) ->
+         User.findById other_user_id, "friends", done
+      me_profiles: (done) -> 
+         TeamProfile.find {user_id:user._id}, "team_id friends friends_count", done
+      other_profiles: (done) -> 
+         TeamProfile.find {user_id:other_user_id}, "team_id friends friends_count", done
+   , (err, results) ->
+      cb(new MongoError(err)) if err
+
+      other = results.other
+      me_profiles = results.me_profiles
+      other_profiles = results.other_profiles
+      user.friends.pull(other._id)
+      other.friends.pull(user._id)
+
+      updated = [
+         (done) -> user.save(done)
+         (done) -> other.save(done)
+      ]
+
+      for me in me_profiles
+         for otherP in other_profiles
+            if me.team_id.toString() == otherP.team_id.toString()
+               do (mine = me, others = otherP) ->
+                  mine.friends.pull(others._id)
+                  others.friends.pull(mine._id)
+                  updated.push (done) -> 
+                     mine.friends_count = mine.friends.length
+                     mine.save(done)
+                  updated.push (done) -> 
+                     others.friends_count = others.friends.length
+                     others.save(done)
+               break
+      
       async.parallel updated, cb
 
 userSchema.statics.sendInvite = (from, to_id, cb) ->
