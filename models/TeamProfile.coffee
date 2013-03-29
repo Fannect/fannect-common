@@ -91,7 +91,7 @@ teamProfileSchema.statics.createAndAttach = (user, team_id, cb) ->
       async.parallel 
          team: (done) -> Team.findById team_id, "full_name team_key is_college sport_name sport_key", done
          user: (done) -> User.findById user._id, "profile_image_url first_name last_name friends verified", done
-         
+         last: (done) -> context.findOne({team_id: team_id }).select("rank").sort("-rank").limit(1).exec(done)
       , (err, results) ->
          return cb(new MongoError(err)) if err
       
@@ -119,6 +119,7 @@ teamProfileSchema.statics.createAndAttach = (user, team_id, cb) ->
                      team_image_url: ""
                      profile_image_url: results.user.profile_image_url
                      verified: results.user.verified
+                     rank: (results.last?.rank or 0) + 1
                   }, done
                update_owner: (done) ->
                   User.update {_id: user._id}, {$addToSet: {team_profiles: newId}}, done
