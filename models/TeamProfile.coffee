@@ -1,7 +1,5 @@
 mongoose = require "mongoose"
 Schema = mongoose.Schema
-User = require "./User"
-Team = require "./Team"
 async = require "async"
 MongoError = require "../errors/MongoError"
 RestError = require "../errors/RestError"
@@ -79,6 +77,8 @@ teamProfileSchema.methods.processEvents = (team) ->
 teamProfileSchema.statics.createAndAttach = (user, team_id, cb) ->
    context = @
    newId = new mongoose.Types.ObjectId
+   User = require "./User"
+   Team = require "./Team"
 
    # Check for existance
    context
