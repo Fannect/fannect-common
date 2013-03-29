@@ -1,0 +1,45 @@
+{
+   "teamprofiles": [
+      {
+         "_id": "5102b17148a0c8f70c100001",
+         "name": "Test1",
+         "team_id": "5102b17148a0c8f70c100111",
+         "rank": 1,
+         "points": {
+            "overall": 10
+         }
+      }, {
+         "_id": "5102b17148a0c8f70c100002",
+         "name": "Test2",
+         "team_id": "5102b17148a0c8f70c100111",
+         "rank": 2,
+         "points": {
+            "overall": 8
+         }
+      }, {
+         "_id": "5102b17148a0c8f70c100003",
+         "name": "Test3",
+         "team_id": "5102b17148a0c8f70c100111",
+         "rank": 3,
+         "points": {
+            "overall": 6
+         }
+      }, {
+         "_id": "5102b17148a0c8f70c100004",
+         "name": "Test4",
+         "team_id": "5102b17148a0c8f70c100111",
+         "rank": 4,
+         "points": {
+            "overall": 6
+         }
+      }, {
+         "_id": "5102b17148a0c8f70c100005",
+         "name": "Test5",
+         "team_id": "5102b17148a0c8f70c100111",
+         "rank": 5,
+         "points": {
+            "overall": 2
+         }
+      }
+   ]
+}
