@@ -1,6 +1,7 @@
 create = require "./create"
 availability = require "./availability"
 metaUtils = require "./meta"
+RestError = require "../errors/RestError"
 
 class GameStatus 
 
