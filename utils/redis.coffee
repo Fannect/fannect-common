@@ -1,4 +1,5 @@
 url = require("url")
+async = require("async")
 connections = []
 
 module.exports = (redis_url, connection_name = "client") ->
@@ -27,8 +28,12 @@ module.exports = (redis_url, connection_name = "client") ->
    return module.exports[connection_name or client] = client
 
 # client = module.exports.client = null
-module.exports.closeAll = () ->
+module.exports.closeAll = (cb) ->
+   parallel = []
    for name in connections
       if (client = module.exports[name])
-         console.log "redis (#{name}) quitting!"
-         client.quit() 
+         parallel = (done) ->
+            console.log "redis (#{name}) quitting!"
+            client.quit(done) 
+
+   async.parallel parallel, cb
