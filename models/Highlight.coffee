@@ -31,7 +31,7 @@ highlightSchema = new mongoose.Schema
    league_name: { type: String, require: true }
    game_type: { type: String, require: true, index: true }
    game_meta: Schema.Types.Mixed
-   favorite: { type: Boolean }
+   is_active: { type: Boolean, require: true, index: true, default: true }
 
 highlightSchema.statics.createAndAttach = (profile, options, cb) ->
    return cb new InvalidArgumentError("Required: image_url") unless options?.image_url
