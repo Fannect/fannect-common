@@ -28,7 +28,8 @@ module.exports = Job
 module.exports.types = 
    rename: require "./RenameJob"
    profile_image: require "./ProfileImageJob"
-   rank_update: require "./RankUpdateJob"
+   profile_rank_update: require "./ProfileRankUpdateJob"
+   team_rank_update: require "./TeamRankUpdateJob"
 
 module.exports.create = (json) ->
    if typeof json == "string"

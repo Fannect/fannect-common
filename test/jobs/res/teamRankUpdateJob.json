@@ -1,0 +1,177 @@
+{
+    "teamprofiles": [
+        {
+            "_id": "5102b17148a0c8f70c100054",
+            "user_id": "5102b17168a0c8f70c000002",
+            "name": "Ron Testing",
+            "team_id": "51084c19f71f55551a7b1ef6",
+            "team_key": "l.test.com-t.19",
+            "team_name": "KCMO Fannect",
+            "events": [
+                {
+                    "_id": "51168b778f863a0200000104",
+                    "type": "attendance_streak",
+                    "meta": {
+                        "checked_in": true,
+                        "lat": 26,
+                        "lng": 45
+                    },
+                    "points_earned": { "dedication": 10 }
+                }
+            ],
+            "is_college": false,
+            "waiting_events": [
+                {
+                    "_id": "51168b7d8f962a0200033004",
+                    "type": "game_face",
+                    "meta": { 
+                        "face_on": true,
+                        "motivated_count":11
+                    }
+                }, {
+                    "_id": "51168b778f862a0560000021",
+                    "type": "guess_the_score",
+                    "meta": {
+                        "picked": true,
+                        "away_score": 99,
+                        "home_score": 93
+                    }
+                }, {
+                    "_id": "51168b778f863a0200000104",
+                    "type": "attendance_streak",
+                    "meta": {
+                        "checked_in": true,
+                        "lat": 26,
+                        "lng": 45
+                    }
+                }
+            ]
+        }, {
+            "_id": "5102b17168a0c8f70c100007",
+            "user_id": "5102b17168a0c8f70c000002",
+            "name": "Ron Testing",
+            "team_id": "51084c19f71f55551a7b1ef6",
+            "team_key": "l.test.com-t.19",
+            "team_name": "KCMO Fannect",
+            "events": [],
+            "is_college": false,
+            "waiting_events": [
+                {
+                    "_id": "51168b6d8f862a0200033004",
+                    "type": "game_face",
+                    "meta": { "face_on": true }
+                }, {
+                    "_id": "51168b778f862a0200000023",
+                    "type": "guess_the_score",
+                    "meta": {
+                        "picked": true,
+                        "away_score": 88,
+                        "home_score": 86
+                    }
+                }
+            ],
+            "groups": [
+                {
+                    "_id": "51168b778f862a0204400108",
+                    "group_id": "51084c19f71f55551a7b2ef7",
+                    "name": "Some group",
+                    "tags": ["greek"]
+                }
+            ] 
+        }, {
+            "_id": "5102b17168a0c8f70c001005",
+            "user_id": "5102b17168a0c8f70c000002",
+            "name": "Ron Testing",
+            "team_id": "51084c19f71f55551a7b1ef6",
+            "team_key": "l.test.com-t.19",
+            "team_name": "KCMO Fannect",
+            "friends": ["5102b17168a0c8f70c000007"],
+            "events": [],
+            "is_college": true,
+            "waiting_events": [
+                {
+                    "_id": "51168b778f862a0200200023",
+                    "type": "guess_the_score",
+                    "meta": {
+                        "picked": true,
+                        "away_score": 44,
+                        "home_score": 22
+                    }
+                }, {
+                    "_id": "51168b778f862a0204300103",
+                    "type": "attendance_streak",
+                    "meta": {
+                        "checked_in": true,
+                        "lat": 26,
+                        "lng": 45
+                    },
+                    "event_key": "something"
+                }
+            ],
+            "groups": [
+                {
+                    "_id": "51168b778f862a0204400101",
+                    "group_id": "51084c19f71f55551a7b2ef7",
+                    "name": "Some group",
+                    "tags": ["greek"]
+                }
+            ] 
+        }
+    ],
+    "groups": [
+        {
+            "_id": "51084c19f71f55551a7b2ef7",
+            "name": "Some group",
+            "team_id": "51084c19f71f55551a7b1ef6",
+            "team_key": "l.test.com-t.19",
+            "team_name": "KCMO Fannect",
+            "sport_key": "15008000",
+            "sport_name": "Basketball",
+            "tags": ["greek"]
+        }, {
+            "_id": "51084c19f71f55551a7b2ef9",
+            "name": "Some other group",
+            "team_id": "51084c19f71f55551a8b1ef3",
+            "team_key": "l.test.com-t.21",
+            "team_name": "KCMO Fannect 2",
+            "sport_key": "15008000",
+            "sport_name": "Basketball",
+            "tags": ["greek"]
+        }
+    ],
+    "teams": [
+        {
+            "_id": "51084c19f71f55551a7b1ef6",
+            "team_key": "l.test.com-t.19",   
+            "mascot": "Fannect",
+            "location_name": "KCMO",
+            "full_name": "KCMO Fannect",
+            "stadium": {
+                "stadium_id": "51084b38f71f54551a8b1d95",
+                "name": "TD Garden",
+                "location": "Boston, MA",
+                "coords": [ -71.06222, 42.366289 ]
+            },
+            "sport_key": "15008000",
+            "sport_name": "Basketball",
+            "league_key": "l.test3.nba.com",
+            "league_name": "National Basketball Association",
+            "conference_key": "c.eastern",
+            "conference_name": "Eastern",
+            "is_college": false,
+            "schedule": {
+                "postgame": {
+                    "event_key": "something.com-1121",
+                    "attendance": 16701,
+                    "game_time": "2013-02-09T01:00:00Z",
+                    "is_home": true,
+                    "opponent": "Apple",
+                    "opponent_id": "5112238520b4f61f5be20f90",
+                    "opponent_score": 99,
+                    "score": 93,
+                    "won": false
+                }
+            }
+        }
+    ]
+}

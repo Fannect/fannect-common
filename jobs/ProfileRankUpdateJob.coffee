@@ -3,10 +3,10 @@ Job = require "./Job"
 TeamProfile = require "../models/TeamProfile"
 _ = require "underscore"
 
-class RankUpdateJob extends Job
+class ProfileRankUpdateJob extends Job
    constructor: (data = {}) ->
       data.is_locking = true
-      data.type = "rank_update"
+      data.type = "profile_rank_update"
 
       if data.team_profile_id and data.team_id
          data.meta =
@@ -15,7 +15,7 @@ class RankUpdateJob extends Job
          delete data.team_profile_id
          delete data.team_id
       else if not data.meta
-         throw new Error("team_profile_id and team_id are required to create RankUpdateJob")
+         throw new Error("team_profile_id and team_id are required to create ProfileRankUpdateJob")
          
 
       data.locking_id = "rank_#{data.meta.team_id}"
@@ -52,4 +52,4 @@ class RankUpdateJob extends Job
             
             async.parallel(update, cb)
 
-module.exports = RankUpdateJob
+module.exports = ProfileRankUpdateJob
