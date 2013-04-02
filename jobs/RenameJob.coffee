@@ -1,6 +1,7 @@
 async = require "async"
 Job = require "./Job"
 Huddle = require "../models/Huddle"
+Highlight = require "../models/Highlight"
 
 class RenameJob extends Job
    constructor: (data = {}) ->
@@ -36,6 +37,21 @@ class RenameJob extends Job
             Huddle.update { owner_user_id: @meta.user_id }
             , { owner_name: @meta.new_name }
             , done
+         highlights: (done) =>
+            Highlight.update { owner_user_id: @meta.user_id }
+            , { owner_name: @meta.new_name }
+            , done
+         comments: (done) =>
+            Highlight.find { "comments.owner_user_id": @meta.user_id }, "comments", (err, highlights) =>
+               return done(err) if err or not (highlights?.length > 0)
+               q = async.queue (highlight, callback) =>
+                  for comment in highlight.comments
+                     if @meta.user_id == comment.owner_user_id.toString()
+                        comment.owner_name = @meta.new_name
+                  highlight.save(callback)
+               , 10
+               q.push(highlight) for highlight in highlights
+               q.drain = done
       , cb
 
 module.exports = RenameJob

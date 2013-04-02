@@ -14,6 +14,7 @@ TeamProfile = require "../../models/TeamProfile"
 User = require "../../models/User"
 Stadium = require "../../models/Stadium"
 Huddle = require "../../models/Huddle"
+Highlight = require "../../models/Highlight"
 Group = require "../../models/Group"
 
 data_renameJob = require "./res/renameJob"
@@ -46,22 +47,43 @@ describe "Jobs", () ->
             job = new RenameJob(user_id: user_id, new_name: new_name )
             job.run (err) ->
                return done(err) if err
-               Huddle.find
-                  $or: [
-                     { "owner_user_id": user_id },
-                     { "replies.owner_user_id": user_id }
-                  ] 
-               , (err, huddles) ->
-                  return done(err) if err
-                     
-                  for huddle in huddles
-                     if huddle.owner_user_id.toString() == user_id
-                        huddle.owner_name.should.equal(new_name)
 
-                     for reply in huddle.replies
-                        if reply.owner_user_id.toString() == user_id
-                           reply.owner_name.should.equal(new_name)
-                  done()
+               async.parallel
+                  huddles: (done) ->
+                     Huddle.find
+                        $or: [
+                           { "owner_user_id": user_id },
+                           { "replies.owner_user_id": user_id }
+                        ] 
+                     , (err, huddles) ->
+                        return done(err) if err
+                           
+                        for huddle in huddles
+                           if huddle.owner_user_id.toString() == user_id
+                              huddle.owner_name.should.equal(new_name)
+
+                           for reply in huddle.replies
+                              if reply.owner_user_id.toString() == user_id
+                                 reply.owner_name.should.equal(new_name)
+                        done()
+                  highlights: (done) ->
+                     Highlight.find
+                        $or: [
+                           { "owner_user_id": user_id },
+                           { "comments.owner_user_id": user_id }
+                        ] 
+                     , (err, highlights) ->
+                        return done(err) if err
+                           
+                        for highlight in highlights
+                           if highlight.owner_user_id.toString() == user_id
+                              highlight.owner_name.should.equal(new_name)
+
+                           for comment in highlight.comments
+                              if comment.owner_user_id.toString() == user_id
+                                 comment.owner_name.should.equal(new_name)
+                        done()
+               , done
 
    describe "ProfileImageJob", () ->
 
@@ -76,7 +98,7 @@ describe "Jobs", () ->
       it "should error when creating job without user_id or new_image_urls", () ->
          ( -> new ProfileImageJob() ).should.throw();
 
-      it "should rename all huddles and replies to new name", (done) ->
+      it "should update all references to new profile image", (done) ->
          user_id = "5102b17168a0c8f70c000002"
          new_image_url = "http://fannect.me/newimage"
 
@@ -86,14 +108,31 @@ describe "Jobs", () ->
             job = new ProfileImageJob(user_id: user_id, new_image_url: new_image_url )
             job.run (err) ->
                return done(err) if err
-               Huddle.find { "replies.owner_user_id": user_id }, (err, huddles) ->
-                  return done(err) if err
-                     
-                  for huddle in huddles
-                     for reply in huddle.replies
-                        if reply.owner_user_id.toString() == user_id
-                           reply.owner_profile_image_url.should.equal(new_image_url)
-                  done()
+
+               async.parallel
+                  huddles: (done) ->
+                     Huddle.find { "replies.owner_user_id": user_id }, (err, huddles) ->
+                        return done(err) if err   
+                        for huddle in huddles
+                           for reply in huddle.replies
+                              if reply.owner_user_id.toString() == user_id
+                                 reply.owner_profile_image_url.should.equal(new_image_url)
+                        done()
+                  highlights: (done) ->
+                     Highlight.find { owner_user_id: user_id }, "owner_profile_image_url", (err, highlights) ->
+                        return done(err) if err
+                        for highlight in highlights
+                           highlight.owner_profile_image_url.should.equal(new_image_url)
+                        done()
+                  comments: (done) ->
+                     Highlight.find { "comments.owner_user_id": user_id }, (err, highlights) ->
+                        return done(err) if err
+                        for highlight in highlights
+                           for comment in highlight.comments
+                              if comment.owner_user_id.toString() == user_id
+                                 comment.owner_profile_image_url.should.equal(new_image_url)
+                        done()
+               , done
    
    describe "ProfileRankUpdateJob", () ->
 

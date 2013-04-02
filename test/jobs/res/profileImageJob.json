@@ -71,5 +71,58 @@
             ],
             "reply_count": 1 
         }
+    ],
+    "highlights": [
+        {
+            "_id": "513526fec16e8ec75f00000a",
+            "team_id": "5102b17168a0c8f70c000008",
+            "team_name": "Kansas St. Wildcats",
+            "owner_id": "5102b17168a0c8f70c000005",
+            "owner_user_id": "5102b17168a0c8f70c000002",
+            "owner_profile_image_url": "http://fannect.me/some-picture.jpg",
+            "owner_name": "Mike Testing",
+            "caption": "My awesome caption",
+            "up_votes": 10,
+            "down_votes": 2,
+            "comments": [ 
+                { 
+                    "_id": "513526fec16e8ec75f00000b",
+                    "owner_id": "5102b17168a0c8f70c000005",
+                    "owner_user_id": "5102b17168a0c8f70c000002",
+                    "owner_name": "Mike Testing",
+                    "content": "Here is some fake content"
+                } 
+            ],
+            "comment_count": 1,
+            "game_type": "gameday_pics"
+        }, {
+            "_id": "513526fec16e8ec75f00001b",
+            "team_id": "5102b17168a0c8f70c000008",
+            "team_name": "Kansas St. Wildcats",
+            "owner_id": "5102b17168a0c8f70c000005",
+            "owner_user_id": "5102b17168a0c8f70c000003",
+            "owner_profile_image_url": "http://fannect.me/some-picture.jpg",
+            "owner_name": "Mike Testing",
+            "caption": "My awesome caption",
+            "up_votes": 10,
+            "down_votes": 2,
+            "comments": [ 
+                { 
+                    "_id": "514526fec16e8ec75f000111",
+                    "owner_id": "5102b17168a0c8f70c000005",
+                    "owner_user_id": "5102b17168a0c8f70c000002",
+                    "owner_name": "Mike Testing",
+                    "content": "Here's my comment!"
+                }, { 
+                    "_id": "514526fec16e8ec75f000112",
+                    "owner_id": "5102b17168a0c8f70c000005",
+                    "owner_user_id": "5102b17168a0c8f70c000004",
+                    "owner_name": "Scott Tester",
+                    "content": "Here is some fake content"
+                } 
+            ],
+            "comment_count": 2,
+            "game_type": "gameday_pics"
+        }
     ]
 }
