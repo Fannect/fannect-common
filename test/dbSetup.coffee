@@ -4,6 +4,7 @@ TeamProfile = require "../../common/models/TeamProfile"
 Team = require "../models/Team"
 Group = require "../models/Group"
 Huddle = require "../models/Huddle"
+Highlight = require "../models/Highlight"
 async = require "async"
 
 module.exports =
