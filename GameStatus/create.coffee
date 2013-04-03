@@ -6,11 +6,11 @@ InvalidArgumentError = require "../errors/InvalidArgumentError"
 create = module.exports = (info, status, next) ->
 
    TeamProfile
-   .findById(info.profileId)
+   .findOne({_id: info.profileId, is_active: true })
    .select("user_id team_id waiting_events")
    .exec (err, profile) ->
       return next(new MongoError(err)) if err
-      return next(new InvalidArgumentError("Invalid: team_profile_id")) unless profile
+      return next(new ResourceNotFoundError("Not found: TeamProfile")) unless profile
       info.profile = profile
 
       return setup(info, status, next) if info.team

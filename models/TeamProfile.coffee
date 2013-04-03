@@ -49,6 +49,7 @@ teamProfileSchema = new mongoose.Schema
       tags: [{ type: String }]
    ]
    verified: String
+   is_active: { type: Boolean, require: true, default: true }
 
 teamProfileSchema.methods.processEvents = (team) ->
    return if not @waiting_events or @waiting_events.length < 1
@@ -76,21 +77,19 @@ teamProfileSchema.methods.processEvents = (team) ->
 
 teamProfileSchema.statics.createAndAttach = (user, team_id, cb) ->
    context = @
-   newId = new mongoose.Types.ObjectId
    User = require "./User"
    Team = require "./Team"
 
    # Check for existance
-   context
-   .find({user_id: user._id, team_id: team_id })
-   .exec (err, data) ->
+   TeamProfile
+   .findOne({user_id: user._id, team_id: team_id })
+   .exec (err, newProfile) ->
       return cb(new MongoError(err)) if err
-      return cb(new RestError(409, "duplicate")) if data?.length != 0
-
+      return cb(new RestError(409, "duplicate")) if newProfile?.is_active
       # Get team and current friends
-      async.parallel 
-         team: (done) -> Team.findById team_id, "full_name team_key is_college sport_name sport_key", done
+      async.parallel
          user: (done) -> User.findById user._id, "profile_image_url first_name last_name friends verified", done
+         team: (done) -> Team.findById team_id, "full_name team_key is_college sport_name sport_key", done
          last: (done) -> context.findOne({team_id: team_id }).select("rank").sort("-rank").limit(1).exec(done)
       , (err, results) ->
          return cb(new MongoError(err)) if err
@@ -101,40 +100,54 @@ teamProfileSchema.statics.createAndAttach = (user, team_id, cb) ->
          .exec (err, friends) ->
             return cb(new MongoError(err)) if err
 
+            isNew = false
+            unless newProfile
+               isNew = true
+               newProfile = new TeamProfile
+                  _id: new mongoose.Types.ObjectId
+                  user_id: user._id 
+                  name: "#{results.user.first_name} #{results.user.last_name}"
+                  sport_key: results.team.sport_key
+                  sport_name: results.team.sport_name
+                  team_id: results.team._id
+                  team_key: results.team.team_key
+                  team_name: results.team.full_name
+                  is_college: results.team.is_college
+                  team_image_url: ""
+                  profile_image_url: results.user.profile_image_url
+                  verified: results.user.verified
+                  is_active: true
+            
+            newProfile.rank = (results.last?.rank or 0) + 1
+
             new_friends = []
             updated = 
-               create: (done) ->
-                  context.create {
-                     _id: newId
-                     user_id: user._id 
-                     name: "#{results.user.first_name} #{results.user.last_name}"
-                     sport_key: results.team.sport_key
-                     sport_name: results.team.sport_name
-                     team_id: results.team._id
-                     team_key: results.team.team_key
-                     team_name: results.team.full_name
-                     is_college: results.team.is_college
-                     friends: new_friends
-                     friends_count: new_friends.length
-                     team_image_url: ""
-                     profile_image_url: results.user.profile_image_url
-                     verified: results.user.verified
-                     rank: (results.last?.rank or 0) + 1
-                  }, done
+               newProfile: (done) -> newProfile.save(done)
                update_owner: (done) ->
-                  User.update {_id: user._id}, {$addToSet: {team_profiles: newId}}, done
+                  User.update {_id: user._id}, {$addToSet: {team_profiles: newProfile._id}}, done
 
             # Swap team profile ids
             for p in friends
                do (profile = p) ->
-                  profile.friends.addToSet(newId)
+                  profile.friends.addToSet(newProfile._id)
                   profile.friends_count++
                   new_friends.push(profile._id)
                   updated[profile._id] = (done) -> profile.save(done)
 
+            # Update new profile
+            newProfile.friends = new_friends
+            newProfile.friends_count = new_friends.length
+
             # Save all changes
             async.parallel updated, (err, result) ->
-               return cb(new MongoError(err)) if err 
-               cb null, result.create
+               return cb(new MongoError(err)) if err
 
-module.exports = mongoose.model("TeamProfile", teamProfileSchema)
+               # update rank
+               unless isNew
+                  ProfileRankUpdateJob = require("../jobs/ProfileRankUpdateJob")
+                  job = new ProfileRankUpdateJob({ team_profile_id: newProfile._id, team_id: team_id })
+                  job.queue()
+
+               cb null, newProfile
+
+TeamProfile = module.exports = mongoose.model("TeamProfile", teamProfileSchema)

@@ -38,15 +38,14 @@ class TeamRankUpdateJob extends Job
 
    rankBatch: (team, skip, cb) =>
       TeamProfile
-      .find({ team_id: team._id })
+      .find({ team_id: team._id, is_active: true })
       .skip(skip)
       .limit(@meta.batch_size)
       .sort({"points.overall": -1, name: 1})
-      .select("rank points")
+      .select("rank points is_active")
       .exec (err, profiles) =>
          return cb(err) if err
          return cb() if profiles.length < 1
-
          async.parallel
             batch: (done) =>
                if profiles.length == @meta.batch_size
@@ -74,7 +73,7 @@ class TeamRankUpdateJob extends Job
 
    rankGroups: (team_id, cb) ->
       TeamProfile
-      .aggregate { $match: { "team_id": team_id }}
+      .aggregate { $match: { team_id: team_id, is_active: true }}
       , { $unwind: "$groups" }
       , { $group: { 
          _id: "$groups.group_id",

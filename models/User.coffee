@@ -43,9 +43,9 @@ userSchema.methods.acceptInvite = (other_user_id, cb) ->
       other: (done) ->
          User.findById other_user_id, "friends", done
       me_profiles: (done) -> 
-         TeamProfile.find {user_id:user._id}, "team_id friends friends_count", done
+         TeamProfile.find {user_id:user._id, is_active: true}, "team_id friends friends_count", done
       other_profiles: (done) -> 
-         TeamProfile.find {user_id:other_user_id}, "team_id friends friends_count", done
+         TeamProfile.find {user_id:other_user_id, is_active: true}, "team_id friends friends_count", done
    , (err, results) ->
       cb(new MongoError(err)) if err
 
@@ -90,9 +90,9 @@ userSchema.methods.removeFriend = (other_user_id, cb) ->
       other: (done) ->
          User.findById other_user_id, "friends", done
       me_profiles: (done) -> 
-         TeamProfile.find {user_id:user._id}, "team_id friends friends_count", done
+         TeamProfile.find {user_id:user._id, is_active: true}, "team_id friends friends_count", done
       other_profiles: (done) -> 
-         TeamProfile.find {user_id:other_user_id}, "team_id friends friends_count", done
+         TeamProfile.find {user_id:other_user_id, is_active: true}, "team_id friends friends_count", done
    , (err, results) ->
       cb(new MongoError(err)) if err
 

@@ -17,12 +17,11 @@ class ProfileRankUpdateJob extends Job
       else if not data.meta
          throw new Error("team_profile_id and team_id are required to create ProfileRankUpdateJob")
          
-
       data.locking_id = "rank_#{data.meta.team_id}"
       super data
 
    run: (cb) =>
-      TeamProfile.findById @meta.team_profile_id, "rank points.overall", (err, profile) =>
+      TeamProfile.findOne {_id:@meta.team_profile_id, is_active: true}, "rank points.overall", (err, profile) =>
          return cb(err) if err
          return cb(new Error("Invalid team_profile_id: #{@meta.team_profile_id}")) unless profile
 
@@ -30,16 +29,15 @@ class ProfileRankUpdateJob extends Job
             rank: {$lt: profile.rank }
             team_id: @meta.team_id
             "points.overall": { $lt: profile.points.overall }
+            is_active: true
          ).select("rank")
          .sort("rank")
          .exec (err, profiles) ->
             return cb(err) if err
             return cb() if profiles.length == 0
 
-
             # switch profiles to have the highest rank
             profile.rank = profiles[0].rank
-
             update = []
 
             # move all other profiles down a rank
