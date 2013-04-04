@@ -68,15 +68,14 @@ auth = module.exports =
             next()
          else
             next(new NotAuthorizedError("Do not have required authorization level. Must be 'hof'."))
-
    app: 
       managerStatus: (req, res, next) ->
          return unless token = hasToken(req, res, next)
-         auth.getUser token, (err, user) ->
+         auth.getUser token, (err, app) ->
             return next(err) if err
 
-            if user.role in [ "manager", "owner" ]
-               req.user = user
+            if app.role in [ "manager", "owner" ]
+               req.app = app
                next()
             else
                next(new NotAuthorizedError("Do not have required authorization level. Must be 'manager' or higher."))
@@ -91,6 +90,31 @@ auth = module.exports =
                next()
             else
                next(new NotAuthorizedError("Do not have required authorization level. Must be 'owner'."))
+
+   either: (user_role, app_role) ->
+      userRoles = [ "rookie", "sub", "starter", "allstar", "mvp", "hof" ]
+      appRoles = [ "manager", "owner" ]
+      
+      throw new Error("Invalid user role: #{user_role}") unless (user_role in userRoles)
+      throw new Error("Invalid user role: #{app_role}") unless (app_role in appRoles)
+      
+      userLevel = userRoles.indexOf(user_role)
+      appLevel = appRoles.indexOf(app_role)
+
+      return (req, res, next) ->
+         return unless token = hasToken(req, res, next)
+         auth.getUser token, (err, user) ->
+            return next(err) if err
+
+            console.log "HIT"
+            if userRoles.indexOf(user.role) >= userLevel
+               req.user = user
+               next()
+            else if appRoles.indexOf(user.role) >= appLevel
+               req.app = user
+               next()
+            else
+               next(new NotAuthorizedError("Do not have required authorization level. Must be '#{user_role}', '#{app_role}' or higher."))
 
    createAccessToken: (user, done) ->
       # Create new access_token and store
