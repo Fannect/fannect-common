@@ -32,28 +32,28 @@ highlightSchema = new mongoose.Schema
    game_type: { type: String, require: true, index: true }
    game_meta: Schema.Types.Mixed
    is_active: { type: Boolean, require: true, index: true, default: true }
+   short_id: { type: String, require: true, index: { unique: true }}
 
 highlightSchema.statics.createAndAttach = (profile, options, cb) ->
    return cb new InvalidArgumentError("Required: image_url") unless options?.image_url
-   highlight = new Highlight({
-      team_id: profile.team_id
-      team_name: profile.team_name
-      owner_id: profile._id
-      owner_user_id: profile.user_id
-      owner_name: profile.name
-      owner_verified: profile.verified
-      owner_profile_image_url: profile.profile_image_url
-   })
-
-   # Extend with extra options
-   highlight[k] = v for k, v of options
-   
-   highlight.save (err) ->
+   Highlight.count {}, (err, count) ->
       return cb(new MongoError(err)) if err
-      cb null, highlight
+      highlight = new Highlight({
+         team_id: profile.team_id
+         team_name: profile.team_name
+         owner_id: profile._id
+         owner_user_id: profile.user_id
+         owner_name: profile.name
+         owner_verified: profile.verified
+         owner_profile_image_url: profile.profile_image_url
+         short_id: (count + 1000).toString(34)
+      })
+
+      # Extend with extra options
+      highlight[k] = v for k, v of options
+      
+      highlight.save (err) ->
+         return cb(new MongoError(err)) if err
+         cb null, highlight
    
 Highlight = module.exports = mongoose.model("Highlight", highlightSchema)
-
-
-
-
