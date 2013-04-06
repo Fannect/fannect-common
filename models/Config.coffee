@@ -18,6 +18,7 @@ configSchema = new mongoose.Schema(
 configSchema.statics.nextPhotoChallenge = (cb) ->
    Config.findOne {}, (err, configuration) -> 
       return cb(err) if err
+      return cb(new Error("Configuration has not be set")) unless configuration
       config = configuration.games.photo_challenge
       config.active_index += 1
       config.active_index = 0 if config.active_index >= config.queued_challenges.length
@@ -28,6 +29,7 @@ configSchema.statics.nextPhotoChallenge = (cb) ->
 configSchema.statics.getPhotoChallenge = (cb) ->
    Config.findOne {}, (err, configuration) ->
       return cb(err) if err
+      return cb(new Error("Configuration has not be set")) unless configuration
       cb null, 
          title: configuration.games.photo_challenge.active_title
          description: configuration.games.photo_challenge.active_description
