@@ -117,6 +117,8 @@ teamProfileSchema.statics.createAndAttach = (user, team_id, cb) ->
                   profile_image_url: results.user.profile_image_url
                   verified: results.user.verified
                   is_active: true
+            else
+               newProfile.is_active = true
             
             newProfile.rank = (results.last?.rank or 0) + 1
 
