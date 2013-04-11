@@ -53,14 +53,22 @@ teamProfileSchema = new mongoose.Schema
 
 teamProfileSchema.methods.processEvents = (team) ->
    return if not @waiting_events or @waiting_events.length < 1
+   event_key = team.schedule?.postgame?.event_key
+   return unless event_key
+
+   skipped = []
 
    process = () =>
       ev = @waiting_events.pop()
-      return unless ev?.type
-      eventProcessor[ev.type](ev, team, @)
+      return unless ev
+      
+      if ev.event_key != event_key then skipped.push(ev)
+      else eventProcessor[ev.type](ev, team, @)
+
       process()
 
    process()
+   @waiting_events = skipped
 
    # Reset points
    @points.passion = 0
