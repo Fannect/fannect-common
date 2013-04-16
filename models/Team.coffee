@@ -20,6 +20,7 @@ teamSchema = new mongoose.Schema
    conference_name: { type: String, require: true }
    needs_processing: { type: Boolean, require: true, index: true, default: false }
    is_processing: { type: Boolean, require: true, default: false }
+   aliases: [{ type: String, index: true }]
    points: 
       overall: { type: Number, require: true, default: 0 }
       knowledge: { type: Number, require: true, default: 0 }

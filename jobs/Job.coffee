@@ -30,6 +30,7 @@ module.exports.types =
    profile_image: require "./ProfileImageJob"
    profile_rank_update: require "./ProfileRankUpdateJob"
    team_rank_update: require "./TeamRankUpdateJob"
+   welcome_email: require "./WelcomeEmailJob"
 
 module.exports.create = (json) ->
    if typeof json == "string"

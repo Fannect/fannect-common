@@ -7,6 +7,7 @@ RenameJob = require "../../jobs/RenameJob"
 ProfileImageJob = require "../../jobs/ProfileImageJob"
 ProfileRankUpdateJob = require "../../jobs/ProfileRankUpdateJob"
 TeamRankUpdateJob = require "../../jobs/TeamRankUpdateJob"
+WelcomeEmailJob = require "../../jobs/WelcomeEmailJob"
 
 dbSetup = require "../dbSetup"
 Team = require "../../models/Team"
@@ -278,4 +279,17 @@ describe "Jobs", () ->
             group.points.overall.should.equal(sum)
             done()
 
+   describe "WelcomeEmailJob", () ->
+      it "should create a job with the correct properties", () ->
+         meta = 
+            email: "Blah@something.com"
+            first_name: "First Name"
+
+         job = new TeamRankUpdateJob(meta)
+         job.meta.email.should.equal(meta.email)
+         job.meta.first_name.should.equal(meta.first_name)
+         job.is_locking.should.be.false
+
+      it "should error when creating job without a first_name and email", () ->
+         ( -> new TeamRankUpdateJob() ).should.throw();
    
