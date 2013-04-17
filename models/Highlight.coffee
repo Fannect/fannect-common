@@ -1,5 +1,6 @@
 mongoose = require "mongoose"
 InvalidArgumentError = require "../errors/InvalidArgumentError"
+MongoError = require "../errors/MongoError"
 Schema = mongoose.Schema
 
 highlightSchema = new mongoose.Schema
