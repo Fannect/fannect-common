@@ -53,8 +53,14 @@ highlightSchema.statics.createAndAttach = (profile, options, cb) ->
       # Extend with extra options
       highlight[k] = v for k, v of options
       
-      highlight.save (err) ->
-         return cb(new MongoError(err)) if err
-         cb null, highlight
+      save = () ->
+         highlight.save (err) ->
+            # Short id already exists so try another
+            if err.code == 11000 or err.code == 11001
+               highlight.short_id += "z"
+               return save()
+
+            return cb(new MongoError(err)) if err
+            cb null, highlight
    
 Highlight = module.exports = mongoose.model("Highlight", highlightSchema)
