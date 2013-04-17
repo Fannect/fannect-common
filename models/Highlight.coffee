@@ -39,6 +39,9 @@ highlightSchema.statics.createAndAttach = (profile, options, cb) ->
    return cb new InvalidArgumentError("Required: image_url") unless options?.image_url
    Highlight.count {}, (err, count) ->
       return cb(new MongoError(err)) if err
+
+      short_id = (count + 1000).toString(34)
+
       highlight = new Highlight({
          team_id: profile.team_id
          team_name: profile.team_name
@@ -47,20 +50,23 @@ highlightSchema.statics.createAndAttach = (profile, options, cb) ->
          owner_name: profile.name
          owner_verified: profile.verified
          owner_profile_image_url: profile.profile_image_url
-         short_id: (count + 1000).toString(34)
+         short_id: short_id
       })
 
       # Extend with extra options
       highlight[k] = v for k, v of options
       
-      save = () ->
+      saveHighlight = () ->
          highlight.save (err) ->
             # Short id already exists so try another
-            if err.code == 11000 or err.code == 11001
-               highlight.short_id += "z"
-               return save()
+            if err?.code == 11000 or err?.code == 11001
+               highlight.short_id = short_id + "."
+               return saveHighlight()
+            else if err
+               return cb(new MongoError(err)) if err
 
-            return cb(new MongoError(err)) if err
             cb null, highlight
+
+      saveHighlight()
    
 Highlight = module.exports = mongoose.model("Highlight", highlightSchema)
