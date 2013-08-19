@@ -35,6 +35,7 @@ csvParser.parseTeams = (data, done) ->
                mascot: line.mascot?.trim()
                location_name: line.location_name?.trim()
                full_name: line.full_name?.trim()
+               aliases: line.aliases?.split(",") or []
                # stadium:
                #    name: line.stadium_name
                #    coords: [ line.stadium_long, line.stadium_lat ]
@@ -46,6 +47,8 @@ csvParser.parseTeams = (data, done) ->
                conference_name: line.conference_name
                is_college: line.college == "c"
             
+            newTeam.aliases[i] = a.trim() for a, i in newTeam.aliases
+
             Team.createAndAttach newTeam, (err) ->
                errors.push(new MongoError(err)) if err
                count++
