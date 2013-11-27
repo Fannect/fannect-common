@@ -7,11 +7,12 @@ class ScheduleML
       @sportsEvents = []
 
       schedules = []
-      sportsContents = misc.reachIn(doc, "xts:sports-content-set.sports-content")
+      schedules = misc.reachIn(doc, "xts:sports-content-set.sports-content.0.schedule")
       
-      for sportsContent in sportsContents
-         for schedule in sportsContent.schedule 
-            schedules.push(schedule)
+      # sportsContent = misc.reachIn(doc, "xts:sports-content-set.sports-content.0.schedule")
+      # for sportsContent in sportsContents
+      #    for schedule in sportsContent.schedule 
+      #       schedules.push(schedule)
 
       unless schedules?
          schedules = misc.reachIn(doc, "sports-content.schedule")
