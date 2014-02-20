@@ -10,7 +10,7 @@ class TeamML
       @opposing_score = parseInt(misc.reachIn(teamDoc, "team-stats.0.$.score-opposing"))
       @outcome = misc.reachIn(teamDoc, "team-stats.0.$.event-outcome")
 
-   isValid: () => return @team_key
+   isValid: () => return true # sometimes the team_key can be null for some reason return @team_key
    isHome: () => 
       return true if @alignment == "home"
       return false if @alignment == "away"

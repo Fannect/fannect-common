@@ -6,7 +6,13 @@ class ScheduleML
    constructor: (doc) ->
       @sportsEvents = []
 
+      schedules = []
       schedules = misc.reachIn(doc, "xts:sports-content-set.sports-content.0.schedule")
+      
+      # sportsContent = misc.reachIn(doc, "xts:sports-content-set.sports-content.0.schedule")
+      # for sportsContent in sportsContents
+      #    for schedule in sportsContent.schedule 
+      #       schedules.push(schedule)
 
       unless schedules?
          schedules = misc.reachIn(doc, "sports-content.schedule")
