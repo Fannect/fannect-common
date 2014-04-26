@@ -31,6 +31,7 @@ userSchema = new mongoose.Schema
    verified: String
    birthday: Date
    gender: String
+   taken_survey: Boolean
 
 userSchema.methods.acceptInvite = (other_user_id, cb) ->
    # Require later to not have circular dependancy, may not even matter
